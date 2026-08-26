@@ -1,0 +1,30 @@
+Pizza Ideas 
+
+
+Designing a database:
+Cols:
+Name - "Meat lovers"
+Type - is it a pizza, side , desert, drink
+price - int "15.00"
+Cheese - "[motzzorella, Chedder, NA]"
+Meat - "peperoni,ham,chicken,[ham,chicken],NA"
+other toppings - [tomato,lettus,potato,olives]
+Sauce - [tomato,bbq]
+allergys - [gluten,dairy]
+
+
+classes:
+    Pizza:
+        String: name
+        Type enum: type
+        Double: price
+
+
+    Dream pizza:
+        int: max price
+        int: min price
+
+        map: prefrences
+        
+
+
