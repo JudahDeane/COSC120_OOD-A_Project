@@ -21,10 +21,13 @@ classes:
 
 
     Dream pizza:
-        int: max price
-        int: min price
-
-        map: prefrences
-        
+        var:
+            int: max price
+            int: min price
+            map: prefrences
+        Method:
+            getDesc
+            getMap
+            
 
 

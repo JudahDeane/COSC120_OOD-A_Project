@@ -12,6 +12,7 @@ public class DreamItem {
      * @param minPrice a min price from the user
      * @param maxPrice a max prcie from the user
      */
+
     public DreamItem(Map<Preferences, Object> preferences, float minPrice, float maxPrice) {
         this.preferences = preferences;
         this.minPrice = minPrice;
