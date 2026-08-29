@@ -3,8 +3,8 @@ import java.util.*;
 
 public class DreamItem {
     private final Map<Preferences,Object> preferences;
-    private final float minPrice;
-    private final float maxPrice;
+    private float minPrice;
+    private float maxPrice;
 
     /**
      *  a constructer for when asking for prefrences
@@ -17,6 +17,10 @@ public class DreamItem {
         this.preferences = preferences;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
+    }
+    public DreamItem(Map<Preferences, Object> preferences) {
+        this.preferences = preferences;
+
     }
 
     /**
