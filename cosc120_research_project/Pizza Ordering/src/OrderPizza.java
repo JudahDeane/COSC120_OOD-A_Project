@@ -7,19 +7,24 @@ import java.util.List;
 import java.util.*;
 
 public class OrderPizza {
-    private final String appName = "Judah's Pizza Palace";
-    private AllItems allItems = new AllItems();
+    private final static String appName = "Judah's Pizza Palace";
 
 
 
+    public static void main(){
+        //AllItems allItems = loadData();
+        loadData().dreamItem().getPreference(Preferences.CHEESE);
+        // DreamItem dreamItem = getUserPreference(allItems);
+
+    }
 
 
-    private DreamItem getUserPreference(){
+    private static DreamItem getUserPreference(AllItems allItems){
         Type itemType = (Type) JOptionPane.showInputDialog(null,"Please enter what item you would like to buy",appName,JOptionPane.QUESTION_MESSAGE,null,Type.values(),null);
         if (itemType == null) {
             System.exit(0);
         };
-        String cheese = (String) JOptionPane.showInputDialog(null,"Please enter what cheese would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllCheese(),null);
+        String cheese = (String) JOptionPane.showInputDialog(null,"Please enter what cheese would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllCheese().toArray(),null);
         if (cheese == null) {
             System.exit(0);
         };
@@ -61,17 +66,18 @@ public class OrderPizza {
     }
 
 
-    private void loadData(){
+    private static Item loadData(){
         AllItems allItems = new AllItems();
         Map<Preferences,Object> preferences = new HashMap<>();
         List<String> lines = new ArrayList<>();
-        Path path = Path.of("pizza_menu-database_v10.csv");
+        Path path = Path.of("pizza_menu_database_v10.csv");
         try {
             lines = Files.readAllLines(path);
         } catch (IOException e){
             System.out.println("error reading file");
             System.exit(0);
         }
+        Item item2 = null;
         for (int i =1;i<lines.size();i++){
             String[] line = lines.get(i).split( ",");
             String name = line[0].replace(" ","_");
@@ -81,17 +87,23 @@ public class OrderPizza {
 
             float price = 0;
             try {
-                price = Float.parseFloat(line[2]);
+                price = Float.parseFloat(line[2].replace("$",""));
             }catch(NumberFormatException e ){
                 System.out.println("error reading price");
                 System.exit(0);
             }
+            System.out.println(line[3]);
+            String cheeseArray = line[3];
+            String meatArray = line[4];
+            String ingredientsArray = line[5];
+            String sauceArray = line[6];
+            String allergensArray = line[7];
+            Set<String> cheese = new TreeSet<>(List.of(cheeseArray));
+            Set<String> meat = new TreeSet<>(List.of(meatArray));
+            Set<String> ingredients = new TreeSet<>(List.of(ingredientsArray));
+            Set<String> sauce = new TreeSet<>(List.of(sauceArray));
+            Set<String> allergens = new TreeSet<>(List.of(allergensArray));
 
-            String[] cheese = line[3].replace("[", "").replace("[","").split("|");
-            String[] meat = line[4].replace("[", "").replace("[","").split("|");
-            String[] ingredients = line[5].replace("[", "").replace("[","").split("|");
-            String[] sauce = line[5].replace("[", "").replace("[","").split("|");
-            String[] allergens = line[5].replace("[", "").replace("[","").split("|");
 
             preferences.put(Preferences.CHEESE,cheese);
             preferences.put(Preferences.MEAT,meat);
@@ -100,9 +112,15 @@ public class OrderPizza {
             preferences.put(Preferences.ALLERGENS,allergens);
 
             DreamItem dreamItem = new DreamItem(preferences);
+            //System.out.println(dreamItem.getPreference(Preferences.CHEESE));
             Item item = new Item(name,type,price,dreamItem);
-            allItems.addItem(item);
+            System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
+            item2 = item;
+            //allItems.addItem(item);
+            break;
         }
+
+        return item2;
 
 
 

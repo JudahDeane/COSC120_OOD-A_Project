@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.List;
 
 public class AllItems {
-    private final List<Item> allItems = new ArrayList<>();
+    public final List<Item> allItems = new ArrayList<>();
 
     public void addItem(Item item){
         allItems.add(item);
@@ -25,17 +25,19 @@ public class AllItems {
         return meat.toArray();
     }
 
-    public Object[] getAllCheese(){
-        List<String> cheese = new ArrayList<>();
+    public Set<String> getAllCheese(){
+        Set<String> cheese = new TreeSet<>();
         for(Item item:allItems){
-            cheese.add(item.dreamItem().getPreference(Preferences.CHEESE).toString());
+
+
+            cheese.addAll((Collection<? extends String>) item.dreamItem().getPreference(Preferences.CHEESE));
         }
         cheese.add("NA");
-        return cheese.toArray();
+        return cheese;
     }
 
     public Object[] getAllIngredients(){
-        List<String> ingredients = new ArrayList<>();
+        Set<String> ingredients = new TreeSet<>();
         for(Item item:allItems){
             ingredients.add(item.dreamItem().getPreference(Preferences.INGREDIENTS).toString());
         }
