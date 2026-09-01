@@ -12,9 +12,10 @@ public class OrderPizza {
 
 
     public static void main(){
-        //AllItems allItems = loadData();
-        loadData().dreamItem().getPreference(Preferences.CHEESE);
-        // DreamItem dreamItem = getUserPreference(allItems);
+        AllItems allItems = loadData();
+
+       System.out.println(allItems.getAllPreference(Preferences.CHEESE));
+       DreamItem dreamItem = getUserPreference(allItems);
 
     }
 
@@ -24,19 +25,19 @@ public class OrderPizza {
         if (itemType == null) {
             System.exit(0);
         };
-        String cheese = (String) JOptionPane.showInputDialog(null,"Please enter what cheese would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllCheese().toArray(),null);
+        String cheese = (String) JOptionPane.showInputDialog(null,"Please enter what cheese would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.CHEESE).toArray(),null);
         if (cheese == null) {
             System.exit(0);
         };
-        String meat = (String) JOptionPane.showInputDialog(null,"Please enter what meat would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllMeat(),null);
+        String meat = (String) JOptionPane.showInputDialog(null,"Please enter what meat would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.MEAT).toArray(),null);
         if (meat == null) {
             System.exit(0);
         };
-        String ingredients = (String) JOptionPane.showInputDialog(null,"Do you have preferred ingredients (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllIngredients(),null);
+        String ingredients = (String) JOptionPane.showInputDialog(null,"Do you have preferred ingredients (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null, allItems.getAllPreference(Preferences.INGREDIENTS).toArray(),null);
         if (ingredients == null) {
             System.exit(0);
         };
-        String allergens = (String) JOptionPane.showInputDialog(null,"Do you have any allergens (NA if you don't have any)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllAllergens(),null);
+        String allergens = (String) JOptionPane.showInputDialog(null,"Do you have any allergens (NA if you don't have any)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.ALLERGENS).toArray(),null);
         if (allergens == null) {
             System.exit(0);
         };
@@ -66,19 +67,19 @@ public class OrderPizza {
     }
 
 
-    private static Item loadData(){
+    private static AllItems loadData(){
         AllItems allItems = new AllItems();
-        Map<Preferences,Object> preferences = new HashMap<>();
+
         List<String> lines = new ArrayList<>();
         Path path = Path.of("pizza_menu_database_v10.csv");
         try {
             lines = Files.readAllLines(path);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("error reading file");
             System.exit(0);
         }
-        Item item2 = null;
         for (int i =1;i<lines.size();i++){
+            Map<Preferences,Object> preferences = new HashMap<>();
             String[] line = lines.get(i).split( ",");
             String name = line[0].replace(" ","_");
             Type type = null;
@@ -92,12 +93,12 @@ public class OrderPizza {
                 System.out.println("error reading price");
                 System.exit(0);
             }
-            System.out.println(line[3]);
-            String cheeseArray = line[3];
-            String meatArray = line[4];
-            String ingredientsArray = line[5];
-            String sauceArray = line[6];
-            String allergensArray = line[7];
+           // System.out.println(line[3]);
+            String[] cheeseArray = line[3].replace("[","").replace("]","").split(" ");
+            String[] meatArray = line[4].replace("[","").replace("]","").split(" ");
+            String[] ingredientsArray = line[5].replace("[","").replace("]","").split(" ");
+            String[] sauceArray = line[6].replace("[","").replace("]","").split(" ");
+            String[] allergensArray = line[7].replace("[","").replace("]","").split(" ");
             Set<String> cheese = new TreeSet<>(List.of(cheeseArray));
             Set<String> meat = new TreeSet<>(List.of(meatArray));
             Set<String> ingredients = new TreeSet<>(List.of(ingredientsArray));
@@ -114,13 +115,13 @@ public class OrderPizza {
             DreamItem dreamItem = new DreamItem(preferences);
             //System.out.println(dreamItem.getPreference(Preferences.CHEESE));
             Item item = new Item(name,type,price,dreamItem);
-            System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
-            item2 = item;
-            //allItems.addItem(item);
-            break;
-        }
+            //System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
+            //System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
+            allItems.addItem(item);
 
-        return item2;
+
+        }
+        return allItems;
 
 
 

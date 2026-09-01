@@ -1,4 +1,5 @@
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -16,49 +17,28 @@ public class AllItems {
         }
         return null;
     }
-    public Object[] getAllMeat(){
-        List<String> meat = new ArrayList<>();
-        for(Item item:allItems){
-            meat.add(item.dreamItem().getPreference(Preferences.MEAT).toString());
-        }
-        meat.add("NA");
-        return meat.toArray();
-    }
 
-    public Set<String> getAllCheese(){
+
+    public Set<String> getAllPreference(Preferences preference){
         Set<String> cheese = new TreeSet<>();
+        List<Item> allItems = new ArrayList<>(this.allItems);
+
         for(Item item:allItems){
 
+            // I did not come up with the code to check cast a set, but I fully understand it
+            Object preferenceObj = item.dreamItem().getPreference(preference);
+            if (preferenceObj instanceof Set<?> preferenceSet) {
+                for (Object element : preferenceSet) {
+                    if (element instanceof String str) {
+                        cheese.add(str);
+                    }
+                }
+            }
+                ;
 
-            cheese.addAll((Collection<? extends String>) item.dreamItem().getPreference(Preferences.CHEESE));
         }
         cheese.add("NA");
         return cheese;
-    }
-
-    public Object[] getAllIngredients(){
-        Set<String> ingredients = new TreeSet<>();
-        for(Item item:allItems){
-            ingredients.add(item.dreamItem().getPreference(Preferences.INGREDIENTS).toString());
-        }
-        ingredients.add("NA");
-        return ingredients.toArray();
-    }
-    public Object[] getAllSauce(){
-        List<String> sauce = new ArrayList<>();
-        for(Item item:allItems){
-            sauce.add(item.dreamItem().getPreference(Preferences.SAUCE).toString());
-        }
-        sauce.add("NA");
-        return sauce.toArray();
-    }
-    public Object[] getAllAllergens(){
-        List<String> allergens = new ArrayList<>();
-        for(Item item:allItems){
-            allergens.add(item.dreamItem().getPreference(Preferences.ALLERGENS).toString());
-        }
-        allergens.add("NA");
-        return allergens.toArray();
     }
     public List<Item> getList(){
 
