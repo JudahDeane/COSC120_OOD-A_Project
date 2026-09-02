@@ -2,9 +2,11 @@ import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class OrderPizza {
     private final static String appName = "Judah's Pizza Palace";
@@ -16,6 +18,9 @@ public class OrderPizza {
 
        System.out.println(allItems.getAllPreference(Preferences.CHEESE));
        DreamItem dreamItem = getUserPreference(allItems);
+       List<Item> matches = allItems.getMatches(dreamItem);
+       chooseItem(matches);
+
 
     }
 
@@ -33,7 +38,7 @@ public class OrderPizza {
         if (meat == null) {
             System.exit(0);
         };
-        String ingredients = (String) JOptionPane.showInputDialog(null,"Do you have preferred ingredients (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null, allItems.getAllPreference(Preferences.INGREDIENTS).toArray(),null);
+        String ingredients = (String) JOptionPane.showInputDialog(null,"do you have any ingeridients you don't like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.INGREDIENTS).toArray(),null);
         if (ingredients == null) {
             System.exit(0);
         };
@@ -41,13 +46,14 @@ public class OrderPizza {
         if (allergens == null) {
             System.exit(0);
         };
-        String maxPriceString = (String) JOptionPane.showInputDialog(null,"What is the max price you would pay",appName,JOptionPane.QUESTION_MESSAGE);
-        if (maxPriceString == null) {
-            System.exit(0);
-        };
+
         int maxPrice = -1;
         while (true) {
             try {
+                String maxPriceString = (String) JOptionPane.showInputDialog(null,"What is the max price you would pay",appName,JOptionPane.QUESTION_MESSAGE);
+                if (maxPriceString == null) {
+                    System.exit(0);
+                };
                 maxPrice = Integer.parseInt(maxPriceString);
             } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "please enter a valid integer");
@@ -126,4 +132,83 @@ public class OrderPizza {
 
 
     }
+
+    public static void chooseItem(List<Item> matches){
+        Map<String, Item> nameMap = new HashMap<>();
+        for (Item item: matches){
+            nameMap.put(item.Name(),item);
+        }
+        Map<Item,String> descriptions = new LinkedHashMap<>();
+        for(Item item: matches){
+            descriptions.put(item, item.toString());
+        }
+        List<String> names = new ArrayList<>();
+        for(Item item: matches){
+            names.add(item.Name());
+        }
+
+        Item choiceToLook = null;
+        while (true) {
+            String choiceToLookString = (String) JOptionPane.showInputDialog(null,"Please enter what item you would like to view in more detail ",appName,JOptionPane.QUESTION_MESSAGE,null,names.toArray(),null);
+            if (choiceToLookString== null) System.exit(0);
+            choiceToLook = nameMap.get(choiceToLookString);
+            String buyChoice  = (String) JOptionPane.showInputDialog(null,descriptions.get(choiceToLook)+"\n would you like to buy this item",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+            if (buyChoice== null) System.exit(0);
+            else if (buyChoice.equals("Yes")) {
+                JOptionPane.showConfirmDialog(null,"Thank you for Purchasing ");
+                Person person = getUserData();
+                writeRecord(person,choiceToLook);
+                break;
+            } else if (buyChoice.equals("No")) {
+                continue;
+            }
+
+
+        }
+
+    }
+    public static Person getUserData(){
+
+        String email = (String) JOptionPane.showInputDialog(null,"Please enter your email");
+        if (email== null) System.exit(0);
+        String name = (String) JOptionPane.showInputDialog(null,"Please enter your name");
+        if (name== null) System.exit(0);
+        int phoneNum;
+        while (true) {
+            String phoneNumber = (String) JOptionPane.showInputDialog(null, "Please enter your phone number");
+            if (phoneNumber == null) System.exit(0);
+            try {
+                 phoneNum = Integer.parseInt(phoneNumber);
+                break;
+            } catch (NumberFormatException e) {
+                JOptionPane.showConfirmDialog(null,"Please enter a Integer");
+                continue;
+            }
+        }
+        String address = (String) JOptionPane.showInputDialog(null,"please enter your address for delivery ");
+
+
+        return new Person(email,name,phoneNum,address);
+    }
+    public static void writeRecord(Person person, Item item){
+        String pathString = person.name().strip()+"Delivery_request.txt";
+        Path path = Path.of(pathString);
+       try {
+           Files.writeString(path, person.name()+" would like to order a "+item.Name()+" at "+ person.address()+"\n email: "+person.email()+"\n Phone Number: "+person.phoneNumber());
+       } catch (IOException e){
+           System.out.println("error trying to read file");
+           System.exit(0);
+       }
+
+    }
+
+    public static JPanel jPanel(Set<String> stringSet){
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+        for (String str: stringSet){
+            JCheckBox option = new JCheckBox(str);
+            panel.add(option);
+        }
+        return panel;
+    };
 }

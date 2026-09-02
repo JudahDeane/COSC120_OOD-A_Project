@@ -51,6 +51,13 @@ public class DreamItem {
         return maxPrice;
     }
 
+    public String getDescription(){
+        String desc = "";
+        for(Preferences key: preferences.keySet()){
+            desc += key + " : "+getPreference(key);
+        }
+        return  desc;
+    }
     public boolean compareDreamItem(DreamItem preference){
         for (Preferences key: preferences.keySet()){
             if (preference.getPreference(key).equals("NA")) {return true;}

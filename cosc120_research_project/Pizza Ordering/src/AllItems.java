@@ -20,8 +20,9 @@ public class AllItems {
 
 
     public Set<String> getAllPreference(Preferences preference){
-        Set<String> cheese = new TreeSet<>();
+        Set<String> cheese = new LinkedHashSet<>();
         List<Item> allItems = new ArrayList<>(this.allItems);
+        cheese.add("NA");
 
         for(Item item:allItems){
 
@@ -30,14 +31,16 @@ public class AllItems {
             if (preferenceObj instanceof Set<?> preferenceSet) {
                 for (Object element : preferenceSet) {
                     if (element instanceof String str) {
-                        cheese.add(str);
+                        if (!str.isEmpty()) {
+                            cheese.add(str);
+                        }
                     }
                 }
             }
-                ;
+
 
         }
-        cheese.add("NA");
+
         return cheese;
     }
     public List<Item> getList(){
