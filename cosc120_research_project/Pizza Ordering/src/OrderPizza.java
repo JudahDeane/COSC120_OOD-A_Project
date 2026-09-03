@@ -6,6 +6,7 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OrderPizza {
@@ -19,6 +20,10 @@ public class OrderPizza {
        System.out.println(allItems.getAllPreference(Preferences.CHEESE));
        DreamItem dreamItem = getUserPreference(allItems);
        List<Item> matches = allItems.getMatches(dreamItem);
+       if (matches.isEmpty()){
+           JOptionPane.showConfirmDialog(null,"Sorry we didn't have any products that fit your criteria");
+           System.exit(0);
+       }
        chooseItem(matches);
 
 
@@ -42,10 +47,10 @@ public class OrderPizza {
         if (ingredients == null) {
             System.exit(0);
         };
-        String allergens = (String) JOptionPane.showInputDialog(null,"Do you have any allergens (NA if you don't have any)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.ALLERGENS).toArray(),null);
+        /*String allergens = (String) JOptionPane.showInputDialog(null,"Do you have any allergens (NA if you don't have any)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.ALLERGENS).toArray(),null);
         if (allergens == null) {
             System.exit(0);
-        };
+        };*/
 
         int maxPrice = -1;
         while (true) {
@@ -66,7 +71,15 @@ public class OrderPizza {
         map.put(Preferences.MEAT,meat);
         map.put(Preferences.CHEESE,cheese);
         map.put(Preferences.INGREDIENTS,ingredients);
-        map.put(Preferences.ALLERGENS,allergens);
+
+        // this is temp just for testing
+        map.put(Preferences.VEGAN,"NA");
+        map.put(Preferences.DAIRY,"NA");
+        map.put(Preferences.SOY,"NA");
+        map.put(Preferences.GLUTEN,"NA");
+
+
+
 
 
        return new DreamItem(map,maxPrice);
@@ -86,41 +99,96 @@ public class OrderPizza {
         }
         for (int i =1;i<lines.size();i++){
             Map<Preferences,Object> preferences = new HashMap<>();
-            String[] line = lines.get(i).split( ",");
-            String name = line[0].replace(" ","_");
+
+
+            List<String> items = new ArrayList<>();
+            // this regex pattern and logic was created with the help of google gemini
+            Matcher matcher = Pattern.compile("\\[(.*?)\\]|([^,]+)").matcher(lines.get(i));
+
+            while (matcher.find()) {
+                if (matcher.group(1) != null) {
+                    // Bracketed group content (without brackets)
+                    items.add(matcher.group(1));
+                } else if (matcher.group(2) != null) {
+                    // Non-bracketed, standard comma-separated item
+                    items.add(matcher.group(2).trim());
+                }
+            }
+                // this code here only works if the lines end with a [] like description which is not ideal but it works for my data set
+
+
+            String name = items.get(0).replace(" ","_");
             Type type = null;
 
-            type = Type.valueOf(line[1].toUpperCase());
+            type = Type.valueOf(items.get(1).toUpperCase());
 
             float price = 0;
             try {
-                price = Float.parseFloat(line[2].replace("$",""));
+                price = Float.parseFloat(items.get(2).replace("$",""));
             }catch(NumberFormatException e ){
                 System.out.println("error reading price");
                 System.exit(0);
             }
            // System.out.println(line[3]);
-            String[] cheeseArray = line[3].replace("[","").replace("]","").split(" ");
-            String[] meatArray = line[4].replace("[","").replace("]","").split(" ");
-            String[] ingredientsArray = line[5].replace("[","").replace("]","").split(" ");
-            String[] sauceArray = line[6].replace("[","").replace("]","").split(" ");
-            String[] allergensArray = line[7].replace("[","").replace("]","").split(" ");
+            String[] cheeseArray = items.get(3).split(" ");
+            String[] meatArray = items.get(4).split(" ");
+            String[] ingredientsArray = items.get(5).split(",");
+            String[] sauceArray = items.get(6).split(" ");
+            boolean dairy_allergy = false;
+            switch (items.get(7)){
+                case "yes" -> dairy_allergy = true;
+                case "no" -> dairy_allergy = false;
+                default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
+
+            }
+            boolean gluten_allergy = false;
+            switch (items.get(8)){
+                case "yes" -> gluten_allergy = true;
+                case "no" -> gluten_allergy = false;
+                default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
+
+            }
+            boolean soy_allergy = false;
+            switch (items.get(9)){
+                case "yes" -> soy_allergy = true;
+                case "no" -> soy_allergy = false;
+                default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
+
+            }
+            boolean vegan = false;
+            switch (items.get(10)){
+                case "yes" -> vegan = true;
+                case "no" -> vegan = false;
+                default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
+            }
+            int energy = -1;
+            try {
+                energy = Integer.parseInt(items.get(11));
+            } catch (NumberFormatException e){
+                System.out.println("error trying to read energy at line "+i);
+            }
+
+            String description = items.get(12);
+
             Set<String> cheese = new TreeSet<>(List.of(cheeseArray));
             Set<String> meat = new TreeSet<>(List.of(meatArray));
             Set<String> ingredients = new TreeSet<>(List.of(ingredientsArray));
             Set<String> sauce = new TreeSet<>(List.of(sauceArray));
-            Set<String> allergens = new TreeSet<>(List.of(allergensArray));
+
 
 
             preferences.put(Preferences.CHEESE,cheese);
             preferences.put(Preferences.MEAT,meat);
             preferences.put(Preferences.INGREDIENTS,ingredients);
             preferences.put(Preferences.SAUCE,sauce);
-            preferences.put(Preferences.ALLERGENS,allergens);
+            preferences.put(Preferences.DAIRY,dairy_allergy);
+            preferences.put(Preferences.SOY,soy_allergy);
+            preferences.put(Preferences.GLUTEN,gluten_allergy);
+            preferences.put(Preferences.VEGAN,vegan);
 
             DreamItem dreamItem = new DreamItem(preferences);
             //System.out.println(dreamItem.getPreference(Preferences.CHEESE));
-            Item item = new Item(name,type,price,dreamItem);
+            Item item = new Item(name,type,price,dreamItem,energy,description);
             //System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
             //System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
             allItems.addItem(item);

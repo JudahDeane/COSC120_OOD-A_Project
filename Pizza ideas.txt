@@ -31,3 +31,62 @@ classes:
             
 
 
+
+ I need to make changes to a data base please implement the following changes
+
+
+* convert the allergeys from a list into to 3 seperate cols with either yes or no depending if it has that allergy
+
+
+*make all empty just say NA
+
+
+*add a vegan col and mabey add some items that are vegan
+
+
+*a energy count KJ
+
+
+* replace the " " in the arrays with ,
+
+
+* add a description for each item
+
+
+
+
+the first line of the file is a header that defines the name of each attribute and the order in which it appears.
+
+
+all data is comma separated, with lists and descriptions denoted by square brackets.
+
+
+the dataset contains a variety of features able
+
+to be represented with a range of datatypes, including int, double,
+
+float, Strings, booleans.
+
+
+includes yes/no flags for feature presence (e.g. pickles: yes/no).
+
+
+features a type or category column with repeating fixed values.
+
+
+contains at least one column with list-like data (e.g., sauces, extras, or ingredients).
+
+
+includes NA values to handle empty fields.
+
+
+contains at least one description that includes internal punctuation or complex strings. 
+
+
+my .txt file contains at least 30 entries
+
+
+
+make it follows this guide line 
+
+
