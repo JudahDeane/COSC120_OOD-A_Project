@@ -60,7 +60,7 @@ public class DreamItem {
     }
     public boolean compareDreamItem(DreamItem preference){
         for (Preferences key: preferences.keySet()){
-            if (preference.getPreference(key).equals("NA")) {return true;}
+          if ("NA".equals(preference.getPreference(key))) {return true;}
             if(preferences.get(key).equals(preference.getPreference(key))){return true;}
         }
         return false;

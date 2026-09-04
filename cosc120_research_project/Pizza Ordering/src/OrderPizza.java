@@ -47,6 +47,10 @@ public class OrderPizza {
         if (ingredients == null) {
             System.exit(0);
         };
+        String sauce = (String) JOptionPane.showInputDialog(null,"What sauce would you like",appName,JOptionPane.QUESTION_MESSAGE,null, allItems.getAllPreference(Preferences.SAUCE).toArray(),null);
+        if (sauce == null) {
+            System.exit(0);
+        };
         /*String allergens = (String) JOptionPane.showInputDialog(null,"Do you have any allergens (NA if you don't have any)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.ALLERGENS).toArray(),null);
         if (allergens == null) {
             System.exit(0);
@@ -66,17 +70,33 @@ public class OrderPizza {
             }
             break;
         }
+        String vegan = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        if (vegan == null) {
+            System.exit(0);
+        };
+        String dairy = (String) JOptionPane.showInputDialog(null,"Do you have a dairy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        if (dairy == null) {
+            System.exit(0);
+        };
+        String soy = (String) JOptionPane.showInputDialog(null,"Do you have a soy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        if (soy == null) {
+            System.exit(0);
+        };
+        String gluten = (String) JOptionPane.showInputDialog(null,"Do you have a gluten allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        if (gluten == null) {
+            System.exit(0);
+        };
+
+
         Map<Preferences,Object> map = new HashMap<>();
         map.put(Preferences.TYPE,itemType);
         map.put(Preferences.MEAT,meat);
         map.put(Preferences.CHEESE,cheese);
         map.put(Preferences.INGREDIENTS,ingredients);
-
-        // this is temp just for testing
-        map.put(Preferences.VEGAN,"NA");
-        map.put(Preferences.DAIRY,"NA");
-        map.put(Preferences.SOY,"NA");
-        map.put(Preferences.GLUTEN,"NA");
+        map.put(Preferences.VEGAN,vegan);
+        map.put(Preferences.DAIRY,dairy);
+        map.put(Preferences.SOY,soy);
+        map.put(Preferences.GLUTEN,gluten);
 
 
 
