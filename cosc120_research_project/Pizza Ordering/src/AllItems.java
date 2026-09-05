@@ -6,9 +6,19 @@ import java.util.List;
 public class AllItems {
     public final List<Item> allItems = new ArrayList<>();
 
+    /**
+     * adds an item to the array
+     * @param item the item to add
+     */
     public void addItem(Item item){
         allItems.add(item);
     }
+
+    /**
+     * gets an item from the array based on the name of the item
+     * @param name the name of the item to find
+     * @return the item in the array with the provided name
+     */
     public Item getItem(String name){
         for (Item item:allItems){
             if (item.Name().equals(name)){
@@ -18,11 +28,15 @@ public class AllItems {
         return null;
     }
 
-
+    /**
+     * get all the values for a preference in the allitems array
+     * @param preference the preference to look for like Preference.CHEESE
+     * @return a set of all the preferences
+     */
     public Set<String> getAllPreference(Preferences preference){
-        Set<String> cheese = new LinkedHashSet<>();
+        Set<String> Set = new LinkedHashSet<>();
         List<Item> allItems = new ArrayList<>(this.allItems);
-        cheese.add("NA");
+        Set.add("NA");
 
         for(Item item:allItems){
 
@@ -32,7 +46,7 @@ public class AllItems {
                 for (Object element : preferenceSet) {
                     if (element instanceof String str) {
                         if (!str.isEmpty()) {
-                            cheese.add(str);
+                            Set.add(str);
                         }
                     }
                 }
@@ -41,7 +55,7 @@ public class AllItems {
 
         }
 
-        return cheese;
+        return Set;
     }
     public List<Item> getList(){
 
@@ -49,9 +63,10 @@ public class AllItems {
     }
 
     /**
-     * credit to andreases for the code
-     * @param dreamItem
-     * @return
+     * credit to Dr Andreas Shepley for the code
+     * It uses the dreamitem match method to compare everything in the set and returns a list of matches
+     * @param dreamItem the item to compare to
+     * @return a list of items that match the criteria
      */
     public List<Item> getMatches(DreamItem dreamItem) {
         List<Item> matches = new ArrayList<>();

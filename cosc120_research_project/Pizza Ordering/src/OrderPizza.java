@@ -13,11 +13,16 @@ public class OrderPizza {
     private final static String appName = "Judah's Pizza Palace";
 
 
-
+    /**
+     * a method that:
+     * loads all data from a database in allItems
+     * gets the users preference
+     * gets all the matches in allItems
+     * the call chooseItem on the matches
+     */
     public static void main(){
         AllItems allItems = loadData();
 
-       System.out.println(allItems.getAllPreference(Preferences.CHEESE));
        DreamItem dreamItem = getUserPreference(allItems);
        List<Item> matches = allItems.getMatches(dreamItem);
        if (matches.isEmpty()){
@@ -29,7 +34,11 @@ public class OrderPizza {
 
     }
 
-
+    /**
+     * gets users preference by asking questions with JOptionPane then storing that data in a DreamItem
+     * @param allItems all the items to get all the values of preferences
+     * @return returns a DreamItem with the preferences
+     */
     private static DreamItem getUserPreference(AllItems allItems){
         Type itemType = (Type) JOptionPane.showInputDialog(null,"Please enter what item you would like to buy",appName,JOptionPane.QUESTION_MESSAGE,null,Type.values(),null);
         if (itemType == null) {
@@ -105,7 +114,10 @@ public class OrderPizza {
        return new DreamItem(map,maxPrice);
     }
 
-
+    /**
+     * loads and parses all the data safely from a database then stores it in a AllItems object
+     * @return an AllItems object with all the data from the database
+     */
     private static AllItems loadData(){
         AllItems allItems = new AllItems();
 
@@ -221,6 +233,11 @@ public class OrderPizza {
 
     }
 
+    /**
+     * looks at all the items given then askes which they which item they would like to select.
+     * writes that selected item to a record file
+     * @param matches a list of matches to choose from
+     */
     public static void chooseItem(List<Item> matches){
         Map<String, Item> nameMap = new HashMap<>();
         for (Item item: matches){
@@ -255,6 +272,11 @@ public class OrderPizza {
         }
 
     }
+
+    /**
+     * gets the user contact and delivery information
+     * @return a person record with the information
+     */
     public static Person getUserData(){
 
         String email = (String) JOptionPane.showInputDialog(null,"Please enter your email");
@@ -278,6 +300,12 @@ public class OrderPizza {
 
         return new Person(email,name,phoneNum,address);
     }
+
+    /**
+     * writes a record of and item and the person ording that item to a file
+     * @param person the person ordering the item
+     * @param item the item being ordered
+     */
     public static void writeRecord(Person person, Item item){
         String pathString = person.name().strip()+"Delivery_request.txt";
         Path path = Path.of(pathString);
@@ -290,13 +318,4 @@ public class OrderPizza {
 
     }
 
-    public static JPanel jPanel(Set<String> stringSet){
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-        for (String str: stringSet){
-            JCheckBox option = new JCheckBox(str);
-            panel.add(option);
-        }
-        return panel;
-    };
 }
