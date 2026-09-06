@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Array;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -20,17 +20,21 @@ public class OrderPizza {
      * gets all the matches in allItems
      * the call chooseItem on the matches
      */
-    public static void main(){
+     static void main(){
         AllItems allItems = loadData();
-
-       DreamItem dreamItem = getUserPreference(allItems);
-       List<Item> matches = allItems.getMatches(dreamItem);
-       if (matches.isEmpty()){
-           JOptionPane.showConfirmDialog(null,"Sorry we didn't have any products that fit your criteria");
-           System.exit(0);
-       }
-       chooseItem(matches);
-
+        while (true) {
+            DreamItem dreamItem = getUserPreference(allItems);
+            List<Item> matches = allItems.getMatches(dreamItem);
+            if (matches.isEmpty()) {
+                JOptionPane.showConfirmDialog(null, "Sorry we didn't have any products that fit your criteria");
+                System.exit(0);
+            }
+            boolean chooseItem = chooseItem(matches);
+            if (chooseItem) {
+                continue;
+            }
+            break;
+        }
 
     }
 
@@ -43,35 +47,32 @@ public class OrderPizza {
         Type itemType = (Type) JOptionPane.showInputDialog(null,"Please enter what item you would like to buy",appName,JOptionPane.QUESTION_MESSAGE,null,Type.values(),null);
         if (itemType == null) {
             System.exit(0);
-        };
+        }
         String cheese = (String) JOptionPane.showInputDialog(null,"Please enter what cheese would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.CHEESE).toArray(),null);
         if (cheese == null) {
             System.exit(0);
-        };
+        }
         String meat = (String) JOptionPane.showInputDialog(null,"Please enter what meat would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.MEAT).toArray(),null);
         if (meat == null) {
             System.exit(0);
-        };
+        }
         String ingredients = (String) JOptionPane.showInputDialog(null,"do you have any ingeridients you don't like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.INGREDIENTS).toArray(),null);
         if (ingredients == null) {
             System.exit(0);
-        };
+        }
         String sauce = (String) JOptionPane.showInputDialog(null,"What sauce would you like",appName,JOptionPane.QUESTION_MESSAGE,null, allItems.getAllPreference(Preferences.SAUCE).toArray(),null);
         if (sauce == null) {
             System.exit(0);
-        };
-        /*String allergens = (String) JOptionPane.showInputDialog(null,"Do you have any allergens (NA if you don't have any)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.ALLERGENS).toArray(),null);
-        if (allergens == null) {
-            System.exit(0);
-        };*/
+        }
 
-        int maxPrice = -1;
+
+        int maxPrice;
         while (true) {
             try {
-                String maxPriceString = (String) JOptionPane.showInputDialog(null,"What is the max price you would pay",appName,JOptionPane.QUESTION_MESSAGE);
+                String maxPriceString = JOptionPane.showInputDialog(null,"What is the max price you would pay",appName,JOptionPane.QUESTION_MESSAGE);
                 if (maxPriceString == null) {
                     System.exit(0);
-                };
+                }
                 maxPrice = Integer.parseInt(maxPriceString);
             } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "please enter a valid integer");
@@ -82,19 +83,19 @@ public class OrderPizza {
         String vegan = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
         if (vegan == null) {
             System.exit(0);
-        };
+        }
         String dairy = (String) JOptionPane.showInputDialog(null,"Do you have a dairy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
         if (dairy == null) {
             System.exit(0);
-        };
+        }
         String soy = (String) JOptionPane.showInputDialog(null,"Do you have a soy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
         if (soy == null) {
             System.exit(0);
-        };
+        }
         String gluten = (String) JOptionPane.showInputDialog(null,"Do you have a gluten allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
         if (gluten == null) {
             System.exit(0);
-        };
+        }
 
 
         Map<Preferences,Object> map = new HashMap<>();
@@ -135,7 +136,7 @@ public class OrderPizza {
 
             List<String> items = new ArrayList<>();
             // this regex pattern and logic was created with the help of google gemini
-            Matcher matcher = Pattern.compile("\\[(.*?)\\]|([^,]+)").matcher(lines.get(i));
+            Matcher matcher = Pattern.compile("\\[(.*?)]|([^,]+)").matcher(lines.get(i));
 
             while (matcher.find()) {
                 if (matcher.group(1) != null) {
@@ -150,7 +151,7 @@ public class OrderPizza {
 
 
             String name = items.get(0).replace(" ","_");
-            Type type = null;
+            Type type;
 
             type = Type.valueOf(items.get(1).toUpperCase());
 
@@ -162,35 +163,35 @@ public class OrderPizza {
                 System.exit(0);
             }
            // System.out.println(line[3]);
-            String[] cheeseArray = items.get(3).split(" ");
-            String[] meatArray = items.get(4).split(" ");
+            String[] cheeseArray = items.get(3).split(",");
+            String[] meatArray = items.get(4).split(",");
             String[] ingredientsArray = items.get(5).split(",");
-            String[] sauceArray = items.get(6).split(" ");
+            String[] sauceArray = items.get(6).split(",");
             boolean dairy_allergy = false;
             switch (items.get(7)){
                 case "yes" -> dairy_allergy = true;
-                case "no" -> dairy_allergy = false;
+                case "no" -> {}
                 default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
 
             }
             boolean gluten_allergy = false;
             switch (items.get(8)){
                 case "yes" -> gluten_allergy = true;
-                case "no" -> gluten_allergy = false;
+                case "no" -> {}
                 default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
 
             }
             boolean soy_allergy = false;
             switch (items.get(9)){
                 case "yes" -> soy_allergy = true;
-                case "no" -> soy_allergy = false;
+                case "no" -> {}
                 default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
 
             }
             boolean vegan = false;
             switch (items.get(10)){
                 case "yes" -> vegan = true;
-                case "no" -> vegan = false;
+                case "no" -> {}
                 default ->  System.out.println("error trying to read line:"+i +" dairy allergy" );
             }
             int energy = -1;
@@ -219,10 +220,9 @@ public class OrderPizza {
             preferences.put(Preferences.VEGAN,vegan);
 
             DreamItem dreamItem = new DreamItem(preferences);
-            //System.out.println(dreamItem.getPreference(Preferences.CHEESE));
+
             Item item = new Item(name,type,price,dreamItem,energy,description);
-            //System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
-            //System.out.println(item.dreamItem().getPreference(Preferences.CHEESE));
+
             allItems.addItem(item);
 
 
@@ -238,7 +238,7 @@ public class OrderPizza {
      * writes that selected item to a record file
      * @param matches a list of matches to choose from
      */
-    public static void chooseItem(List<Item> matches){
+    public static Boolean chooseItem(List<Item> matches){
         Map<String, Item> nameMap = new HashMap<>();
         for (Item item: matches){
             nameMap.put(item.Name(),item);
@@ -252,24 +252,30 @@ public class OrderPizza {
             names.add(item.Name());
         }
 
-        Item choiceToLook = null;
+        Item choiceToLook;
+        List<Item> items = new ArrayList<>();
         while (true) {
+
             String choiceToLookString = (String) JOptionPane.showInputDialog(null,"Please enter what item you would like to view in more detail ",appName,JOptionPane.QUESTION_MESSAGE,null,names.toArray(),null);
             if (choiceToLookString== null) System.exit(0);
             choiceToLook = nameMap.get(choiceToLookString);
             String buyChoice  = (String) JOptionPane.showInputDialog(null,descriptions.get(choiceToLook)+"\n would you like to buy this item",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
             if (buyChoice== null) System.exit(0);
             else if (buyChoice.equals("Yes")) {
-                JOptionPane.showConfirmDialog(null,"Thank you for Purchasing ");
-                Person person = getUserData();
-                writeRecord(person,choiceToLook);
+                JOptionPane.showMessageDialog(null,"Thank you for Purchasing ");
+                items.add(choiceToLook);
+                String buyAnother = (String) JOptionPane.showInputDialog(null,"would you like to buy another item",appName,JOptionPane.QUESTION_MESSAGE,null,new String[]{"Yes","No"},null);
+                if(buyAnother.isEmpty()) System.exit(0);
+                if(buyAnother.equals("Yes")) return true;
                 break;
-            } else if (buyChoice.equals("No")) {
-                continue;
             }
 
 
+
         }
+        Person person = getUserData();
+        writeRecord(person,items);
+        return false;
 
     }
 
@@ -279,23 +285,22 @@ public class OrderPizza {
      */
     public static Person getUserData(){
 
-        String email = (String) JOptionPane.showInputDialog(null,"Please enter your email");
+        String email = JOptionPane.showInputDialog(null,"Please enter your email");
         if (email== null) System.exit(0);
-        String name = (String) JOptionPane.showInputDialog(null,"Please enter your name");
+        String name =  JOptionPane.showInputDialog(null,"Please enter your name");
         if (name== null) System.exit(0);
         int phoneNum;
         while (true) {
-            String phoneNumber = (String) JOptionPane.showInputDialog(null, "Please enter your phone number");
+            String phoneNumber =  JOptionPane.showInputDialog(null, "Please enter your phone number");
             if (phoneNumber == null) System.exit(0);
             try {
                  phoneNum = Integer.parseInt(phoneNumber);
                 break;
             } catch (NumberFormatException e) {
                 JOptionPane.showConfirmDialog(null,"Please enter a Integer");
-                continue;
             }
         }
-        String address = (String) JOptionPane.showInputDialog(null,"please enter your address for delivery ");
+        String address =  JOptionPane.showInputDialog(null,"please enter your address for delivery ");
 
 
         return new Person(email,name,phoneNum,address);
@@ -304,13 +309,18 @@ public class OrderPizza {
     /**
      * writes a record of and item and the person ording that item to a file
      * @param person the person ordering the item
-     * @param item the item being ordered
+     * @param items the item being ordered
      */
-    public static void writeRecord(Person person, Item item){
+    public static void writeRecord(Person person, List<Item> items){
         String pathString = person.name().strip()+"Delivery_request.txt";
         Path path = Path.of(pathString);
+        StringBuilder write = new StringBuilder(person.name() + " with details" + "\n Address:" + person.address() + "\n email: " + person.email() + "\n Phone Number: " + person.phoneNumber()+"\n Would like to order the following items:");
+        for (Item item:items){
+            write.append(item.description()).append("\n");
+        }
        try {
-           Files.writeString(path, person.name()+" would like to order a "+item.Name()+" at "+ person.address()+"\n email: "+person.email()+"\n Phone Number: "+person.phoneNumber());
+           Files.writeString(path, write);
+
        } catch (IOException e){
            System.out.println("error trying to read file");
            System.exit(0);

@@ -36,26 +36,11 @@ public class DreamItem {
     /**
      * gets the value of a specified preference
      * @param key a preference enum of the value you want returned
-     * @return
+     * @return the value of the preference in the map
      */
     public Object getPreference(Preferences key) {
         return getItemMap().get(key);
     }
-
-    /**
-     * gets a list of the preferences of the dream item
-     * @return a String contaning a list of preferences
-     */
-    public String getPreferencesString(){
-        StringBuilder out = new StringBuilder();
-        for (Preferences key: preferences.keySet()){
-            out.append(key.toString());
-            out.append(" : ");
-            out.append(preferences.get(key).toString()).append("\n");
-        }
-        return out.toString();
-    }
-
     /**
      * getter for max price
      * @return the max price variable
@@ -69,11 +54,11 @@ public class DreamItem {
      * @return a string of the list of descriptions
      */
     public String getDescription(){
-        String desc = "";
+        StringBuilder desc = new StringBuilder();
         for(Preferences key: preferences.keySet()){
-            desc += key + " : "+getPreference(key);
+            desc.append( key).append(" : ").append(getPreference(key));
         }
-        return  desc;
+        return  desc.toString();
     }
 
     /**
