@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -48,22 +49,14 @@ public class OrderPizza {
         if (itemType == null) {
             System.exit(0);
         }
-        String cheese = (String) JOptionPane.showInputDialog(null,"Please enter what cheese would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.CHEESE).toArray(),null);
-        if (cheese == null) {
-            System.exit(0);
-        }
-        String meat = (String) JOptionPane.showInputDialog(null,"Please enter what meat would you like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.MEAT).toArray(),null);
-        if (meat == null) {
-            System.exit(0);
-        }
-        String ingredients = (String) JOptionPane.showInputDialog(null,"do you have any ingeridients you don't like (NA if you don't mind)",appName,JOptionPane.QUESTION_MESSAGE,null,allItems.getAllPreference(Preferences.INGREDIENTS).toArray(),null);
-        if (ingredients == null) {
-            System.exit(0);
-        }
-        String sauce = (String) JOptionPane.showInputDialog(null,"What sauce would you like",appName,JOptionPane.QUESTION_MESSAGE,null, allItems.getAllPreference(Preferences.SAUCE).toArray(),null);
-        if (sauce == null) {
-            System.exit(0);
-        }
+        List<Object> cheese = checkBox(allItems.getAllPreference(Preferences.CHEESE),"cheese");
+
+        List<Object> meat = checkBox(allItems.getAllPreference(Preferences.MEAT),"meat");
+
+        List<Object> ingredients = checkBox(allItems.getAllPreference(Preferences.INGREDIENTS),"ingredients");
+
+        List<Object> sauce = checkBox(allItems.getAllPreference(Preferences.SAUCE),"sauce");
+
 
 
         int maxPrice;
@@ -80,33 +73,51 @@ public class OrderPizza {
             }
             break;
         }
-        String vegan = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        String vegan = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
         if (vegan == null) {
             System.exit(0);
         }
-        String dairy = (String) JOptionPane.showInputDialog(null,"Do you have a dairy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        String dairy = (String) JOptionPane.showInputDialog(null,"Do you have a dairy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
         if (dairy == null) {
             System.exit(0);
         }
-        String soy = (String) JOptionPane.showInputDialog(null,"Do you have a soy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        String soy = (String) JOptionPane.showInputDialog(null,"Do you have a soy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
         if (soy == null) {
             System.exit(0);
         }
-        String gluten = (String) JOptionPane.showInputDialog(null,"Do you have a gluten allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+        String gluten = (String) JOptionPane.showInputDialog(null,"Do you have a gluten allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
         if (gluten == null) {
             System.exit(0);
         }
 
 
-        Map<Preferences,Object> map = new HashMap<>();
-        map.put(Preferences.TYPE,itemType);
+        Map<Preferences,List<Object>> map = new HashMap<>();
+        List<Object> typeList = new ArrayList<>();
+        typeList.add(itemType);
+        map.put(Preferences.TYPE,typeList);
+
+
+
         map.put(Preferences.MEAT,meat);
+
         map.put(Preferences.CHEESE,cheese);
+
         map.put(Preferences.INGREDIENTS,ingredients);
-        map.put(Preferences.VEGAN,vegan);
-        map.put(Preferences.DAIRY,dairy);
-        map.put(Preferences.SOY,soy);
-        map.put(Preferences.GLUTEN,gluten);
+
+        map.put(Preferences.SAUCE,sauce);
+
+        List<Object> veganList = new ArrayList<>();
+        veganList.add(vegan);
+        map.put(Preferences.VEGAN,veganList);
+        List<Object> dairyList = new ArrayList<>();
+        dairyList.add(dairy);
+        map.put(Preferences.DAIRY,dairyList);
+        List<Object> soyList = new ArrayList<>();
+        soyList.add(soy);
+        map.put(Preferences.SOY,soyList);
+        List<Object> glutenList = new ArrayList<>();
+        glutenList.add(gluten);
+        map.put(Preferences.GLUTEN,glutenList);
 
 
 
@@ -327,5 +338,48 @@ public class OrderPizza {
        }
 
     }
+
+    /**
+     * this method was coded with help from Google Gemini
+     *
+     * creates a JOption pane with check boxes with the set of strings provided
+     * @param set the set of strings to use as checkboxes
+     * @param item the name of the type of thing to be selecting
+     * @return a list of the selected checkboxes
+     */
+    public static List<Object> checkBox(Set<String> set,String item){
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        panel.add(new JLabel("Select your preferred " + item + ":"));
+
+        List<JCheckBox> checkBoxes = new ArrayList<>();
+
+        for (String str : set) {
+            JCheckBox checkbox = new JCheckBox(str);
+            checkBoxes.add(checkbox);
+            panel.add(checkbox);
+        }
+
+        int option = JOptionPane.showConfirmDialog(
+                null,
+                panel,
+                "Preferences",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+        if (option == JOptionPane.CLOSED_OPTION) {
+            System.exit(0);
+        }
+        List<Object> selected = new ArrayList<>();
+        if (option == JOptionPane.OK_OPTION){
+            for (JCheckBox checkBox: checkBoxes){
+                if(checkBox.isSelected()){
+                    selected.add(checkBox.getText());
+                }
+            }
+        }
+        return selected;
+    }
+
 
 }

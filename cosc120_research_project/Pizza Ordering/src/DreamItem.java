@@ -2,7 +2,7 @@
 import java.util.*;
 
 public class DreamItem {
-    private final Map<Preferences,Object> preferences;
+    private final Map<Preferences,List<Object>> preferences;
 
     private float maxPrice;
 
@@ -12,7 +12,7 @@ public class DreamItem {
      * @param maxPrice a max prcie from the user
      */
 
-    public DreamItem(Map<Preferences, Object> preferences, float maxPrice) {
+    public DreamItem(Map<Preferences, List<Object>> preferences, float maxPrice) {
         this.preferences = preferences;
         this.maxPrice = maxPrice;
     }
@@ -22,14 +22,21 @@ public class DreamItem {
      * @param preferences A constructor for a real item
      */
     public DreamItem(Map<Preferences, Object> preferences) {
-        this.preferences = preferences;
+        this.preferences = new HashMap<>();
+        for (Preferences pref: preferences.keySet()){
+            List<Object> list = new ArrayList<>();
+            list.add(preferences.get(pref));
+            this.preferences.put(pref,list);
+        }
+
+
 
     }
     /**
      * a getter for the preferences
      * @return a map of the preference
      */
-    public Map<Preferences, Object> getItemMap() {
+    public Map<Preferences, List<Object>> getItemMap() {
         return new HashMap<>(preferences);
     }
 
@@ -38,7 +45,7 @@ public class DreamItem {
      * @param key a preference enum of the value you want returned
      * @return the value of the preference in the map
      */
-    public Object getPreference(Preferences key) {
+    public List<Object> getPreference(Preferences key) {
         return getItemMap().get(key);
     }
     /**
@@ -56,7 +63,7 @@ public class DreamItem {
     public String getDescription(){
         StringBuilder desc = new StringBuilder();
         for(Preferences key: preferences.keySet()){
-            desc.append( key).append(" : ").append(getPreference(key));
+            desc.append( key).append(" : ").append(getPreference(key).toString().replace("[","").replace("]","")).append("\n");
         }
         return  desc.toString();
     }
@@ -68,8 +75,14 @@ public class DreamItem {
      */
     public boolean compareDreamItem(DreamItem preference){
         for (Preferences key: preferences.keySet()){
-          if ("NA".equals(preference.getPreference(key))) {return true;}
-            if(preferences.get(key).equals(preference.getPreference(key))){return true;}
+            for(Object obj: preference.getPreference(key)) {
+                if ("NA".equals(obj)){
+                    return true;
+                }
+                if (preferences.get(key).equals(preference.getPreference(key))) {
+                    return true;
+                }
+            }
         }
         return false;
     }

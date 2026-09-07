@@ -41,15 +41,17 @@ public class AllItems {
         for(Item item:allItems){
 
             // I did not come up with the code to check cast a set, but I fully understand it
-            Object preferenceObj = item.dreamItem().getPreference(preference);
-            if (preferenceObj instanceof Set<?> preferenceSet) {
-                for (Object element : preferenceSet) {
-                    if (element instanceof String str) {
-                        if (!str.isEmpty()) {
-                            Set.add(str);
+            List<Object> obj = item.dreamItem().getPreference(preference);
+            for (Object preferenceObj:obj){
+                if (preferenceObj instanceof Set<?> preferenceSet) {
+                    for (Object element : preferenceSet) {
+                        if (element instanceof String str) {
+                            if (!str.isEmpty()) {
+                                Set.add(str);
                         }
                     }
                 }
+            }
             }
 
 
