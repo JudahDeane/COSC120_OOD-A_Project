@@ -27,19 +27,52 @@ public class AllItems {
         }
         return null;
     }
+    public Set<Preferences> getAllPreferences(Type type){
+        Set<Item> setType = new LinkedHashSet<>();
+        Set<Preferences> set = new LinkedHashSet<>();
+        for(Item itemType:allItems){
+            if (itemType.dreamItem().getPreference(Preferences.TYPE).getFirst().equals(type)){
+                setType.add(itemType);
+            }
+        }
+        for(Item item: setType){
 
+            for (Preferences preference:item.dreamItem().getItemMap().keySet()) {
+                Object firstVal = item.dreamItem().getPreference(preference).getFirst();
+
+                // this code bellow to check the value of nested collections was made with help by Google Gemini
+
+
+                if (firstVal instanceof Collection<?> col && !col.isEmpty()) {
+                    firstVal = col.iterator().next();
+                }
+
+                if (firstVal != null && !"NA".equals(firstVal.toString())) {
+                    set.add(preference);
+                }
+            }
+        }
+        return new LinkedHashSet<>(set);
+    }
     /**
      * get all the values for a preference in the allitems array
      * @param preference the preference to look for like Preference.CHEESE
      * @return a set of all the preferences
      */
-    public Set<String> getAllPreference(Preferences preference){
+    public Set<String> getAllPreferenceValues(Preferences preference,Type type){
         Set<String> Set = new LinkedHashSet<>();
         List<Item> allItems = new ArrayList<>(this.allItems);
         Set.add("NA");
 
         for(Item item:allItems){
-
+            // code to extract this is the same code from the getAllPreferences
+            Object firstVal = item.dreamItem().getPreference(Preferences.TYPE).getFirst();
+            if (firstVal instanceof Collection<?> col && !col.isEmpty()) {
+                firstVal = col.iterator().next();
+            }
+            if (!firstVal.equals(type)){
+                continue;
+            }
             // I did not come up with the code to check cast a set, but I fully understand it
             List<Object> obj = item.dreamItem().getPreference(preference);
             for (Object preferenceObj:obj){

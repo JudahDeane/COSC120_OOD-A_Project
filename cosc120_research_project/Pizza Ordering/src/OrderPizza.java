@@ -49,14 +49,23 @@ public class OrderPizza {
         if (itemType == null) {
             System.exit(0);
         }
-        List<Object> cheese = checkBox(allItems.getAllPreference(Preferences.CHEESE),"cheese");
-
-        List<Object> meat = checkBox(allItems.getAllPreference(Preferences.MEAT),"meat");
-
-        List<Object> ingredients = checkBox(allItems.getAllPreference(Preferences.INGREDIENTS),"ingredients");
-
-        List<Object> sauce = checkBox(allItems.getAllPreference(Preferences.SAUCE),"sauce");
-
+        Set<Preferences> itemValues = allItems.getAllPreferences(itemType);
+        List<Object> cheese = new ArrayList<>();
+        if (itemValues.contains(Preferences.CHEESE)) {
+             cheese = checkBox(allItems.getAllPreferenceValues(Preferences.CHEESE, itemType), "cheese");
+        }
+        List<Object> meat = new ArrayList<>();
+        if (itemValues.contains(Preferences.MEAT)) {
+             meat = checkBox(allItems.getAllPreferenceValues(Preferences.MEAT, itemType), "meat");
+        }
+        List<Object> ingredients = new ArrayList<>();
+        if (itemValues.contains(Preferences.INGREDIENTS)) {
+            ingredients = checkBox(allItems.getAllPreferenceValues(Preferences.INGREDIENTS, itemType), "ingredients");
+        }
+        List<Object> sauce = new ArrayList<>();
+        if (itemValues.contains(Preferences.SAUCE)) {
+            sauce = checkBox(allItems.getAllPreferenceValues(Preferences.SAUCE, itemType), "sauce");
+        }
 
 
         int maxPrice;
@@ -222,6 +231,7 @@ public class OrderPizza {
 
 
             preferences.put(Preferences.CHEESE,cheese);
+            preferences.put(Preferences.TYPE,type);
             preferences.put(Preferences.MEAT,meat);
             preferences.put(Preferences.INGREDIENTS,ingredients);
             preferences.put(Preferences.SAUCE,sauce);
@@ -232,7 +242,7 @@ public class OrderPizza {
 
             DreamItem dreamItem = new DreamItem(preferences);
 
-            Item item = new Item(name,type,price,dreamItem,energy,description);
+            Item item = new Item(name,price,dreamItem,energy,description);
 
             allItems.addItem(item);
 
@@ -347,7 +357,7 @@ public class OrderPizza {
      * @param item the name of the type of thing to be selecting
      * @return a list of the selected checkboxes
      */
-    public static List<Object> checkBox(Set<String> set,String item){
+    public static List<Object> checkBox(Set<String> set, String item) {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
@@ -357,6 +367,10 @@ public class OrderPizza {
 
         for (String str : set) {
             JCheckBox checkbox = new JCheckBox(str);
+
+            if (str.equals("NA")){
+                checkbox.setSelected(true);
+            }
             checkBoxes.add(checkbox);
             panel.add(checkbox);
         }
@@ -365,15 +379,15 @@ public class OrderPizza {
                 null,
                 panel,
                 "Preferences",
-                JOptionPane.OK_CANCEL_OPTION
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null
         );
         if (option == JOptionPane.CLOSED_OPTION) {
             System.exit(0);
         }
         List<Object> selected = new ArrayList<>();
-        if (option == JOptionPane.OK_OPTION){
-            for (JCheckBox checkBox: checkBoxes){
-                if(checkBox.isSelected()){
+        if (option == JOptionPane.OK_OPTION) {
+            for (JCheckBox checkBox : checkBoxes) {
+                if (checkBox.isSelected()) {
                     selected.add(checkBox.getText());
                 }
             }

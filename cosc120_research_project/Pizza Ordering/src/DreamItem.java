@@ -77,7 +77,7 @@ public class DreamItem {
         for (Preferences key: preferences.keySet()){
             for(Object obj: preference.getPreference(key)) {
                 if ("NA".equals(obj)){
-                    return true;
+                    continue;
                 }
                 if (preferences.get(key).equals(preference.getPreference(key))) {
                     return true;
