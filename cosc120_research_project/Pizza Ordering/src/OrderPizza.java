@@ -21,7 +21,7 @@ public class OrderPizza {
      * gets all the matches in allItems
      * the call chooseItem on the matches
      */
-     static void main(){
+    static void main(){
         AllItems allItems = loadData();
         while (true) {
             DreamItem dreamItem = getUserPreference(allItems);
@@ -52,11 +52,11 @@ public class OrderPizza {
         Set<Preferences> itemValues = allItems.getAllPreferences(itemType);
         List<Object> cheese = new ArrayList<>();
         if (itemValues.contains(Preferences.CHEESE)) {
-             cheese = checkBox(allItems.getAllPreferenceValues(Preferences.CHEESE, itemType), "cheese");
+            cheese = checkBox(allItems.getAllPreferenceValues(Preferences.CHEESE, itemType), "cheese");
         }
         List<Object> meat = new ArrayList<>();
         if (itemValues.contains(Preferences.MEAT)) {
-             meat = checkBox(allItems.getAllPreferenceValues(Preferences.MEAT, itemType), "meat");
+            meat = checkBox(allItems.getAllPreferenceValues(Preferences.MEAT, itemType), "meat");
         }
         List<Object> ingredients = new ArrayList<>();
         if (itemValues.contains(Preferences.INGREDIENTS)) {
@@ -77,28 +77,93 @@ public class OrderPizza {
                 }
                 maxPrice = Integer.parseInt(maxPriceString);
             } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "please enter a valid integer");
-            continue;
+                JOptionPane.showMessageDialog(null, "please enter a valid integer");
+                continue;
             }
             break;
         }
-        String vegan = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
-        if (vegan == null) {
-            System.exit(0);
-        }
-        String dairy = (String) JOptionPane.showInputDialog(null,"Do you have a dairy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
-        if (dairy == null) {
-            System.exit(0);
-        }
-        String soy = (String) JOptionPane.showInputDialog(null,"Do you have a soy allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
-        if (soy == null) {
-            System.exit(0);
-        }
-        String gluten = (String) JOptionPane.showInputDialog(null,"Do you have a gluten allergen",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
-        if (gluten == null) {
-            System.exit(0);
-        }
+        boolean loop = true;
+        boolean vegan = false;
+        do{
+            String veganString = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
+            if (veganString == null) {
+                System.exit(0);
+            }
 
+
+                switch (veganString) {
+                    case "yes" -> {
+                        vegan = true;
+                        loop = false;
+                    }
+                    case "no" ->loop = false;
+                    default -> System.out.println("Please enter yes or no");
+
+                }
+            } while (loop);
+
+        loop = true;
+        boolean dairy = false;
+        do {
+            String dairyString = (String) JOptionPane.showInputDialog(null, "Do you have a dairy allergen", appName, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, "No");
+            if (dairyString == null) {
+                System.exit(0);
+            }
+
+            switch (dairyString) {
+                case "yes" -> {
+                    dairy = true;
+                    loop = false;
+                }
+                case "no" -> {
+                    loop = false;
+                }
+                default -> System.out.println("Please enter yes or no");
+
+            }
+        }while (loop);
+        loop = true;
+        boolean soy = false;
+        do{
+            String soyString = (String) JOptionPane.showInputDialog(null, "Do you have a soy allergen", appName, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, "No");
+            if (soyString == null) {
+                System.exit(0);
+            }
+
+
+            switch (soyString) {
+                case "yes" -> {
+                    soy = true;
+                    loop = false;
+                }
+                case "no" -> {
+                    loop = false;
+                }
+                default -> System.out.println("Please enter yes or no") ;
+
+            }
+        }while (loop);
+        loop = true;
+        boolean gluten = false;
+        do {
+            String glutenString = (String) JOptionPane.showInputDialog(null, "Do you have a gluten allergen", appName, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, "No");
+            if (glutenString == null) {
+                System.exit(0);
+            }
+
+
+            switch (glutenString) {
+                case "yes" -> {
+                    gluten = true;
+                    loop = false;
+                }
+                case "no" -> {
+                    loop = false;
+                }
+                default -> System.out.println("Please enter yes or no");
+
+            }
+        }while (loop);
 
         Map<Preferences,List<Object>> map = new HashMap<>();
         List<Object> typeList = new ArrayList<>();
@@ -132,7 +197,7 @@ public class OrderPizza {
 
 
 
-       return new DreamItem(map,maxPrice);
+        return new DreamItem(map,maxPrice);
     }
 
     /**
@@ -167,7 +232,7 @@ public class OrderPizza {
                     items.add(matcher.group(2).trim());
                 }
             }
-                // this code here only works if the lines end with a [] like description which is not ideal but it works for my data set
+            // this code here only works if the lines end with a [] like description which is not ideal but it works for my data set
 
 
             String name = items.get(0).replace(" ","_");
@@ -182,7 +247,7 @@ public class OrderPizza {
                 System.out.println("error reading price");
                 System.exit(0);
             }
-           // System.out.println(line[3]);
+            // System.out.println(line[3]);
             String[] cheeseArray = items.get(3).split(",");
             String[] meatArray = items.get(4).split(",");
             String[] ingredientsArray = items.get(5).split(",");
@@ -315,7 +380,7 @@ public class OrderPizza {
             String phoneNumber =  JOptionPane.showInputDialog(null, "Please enter your phone number");
             if (phoneNumber == null) System.exit(0);
             try {
-                 phoneNum = Integer.parseInt(phoneNumber);
+                phoneNum = Integer.parseInt(phoneNumber);
                 break;
             } catch (NumberFormatException e) {
                 JOptionPane.showConfirmDialog(null,"Please enter a Integer");
@@ -339,13 +404,13 @@ public class OrderPizza {
         for (Item item:items){
             write.append(item.description()).append("\n");
         }
-       try {
-           Files.writeString(path, write);
+        try {
+            Files.writeString(path, write);
 
-       } catch (IOException e){
-           System.out.println("error trying to read file");
-           System.exit(0);
-       }
+        } catch (IOException e){
+            System.out.println("error trying to read file");
+            System.exit(0);
+        }
 
     }
 
@@ -381,7 +446,7 @@ public class OrderPizza {
                 "Preferences",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null
         );
-        if (option == JOptionPane.CLOSED_OPTION) {
+        if (option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CANCEL_OPTION) {
             System.exit(0);
         }
         List<Object> selected = new ArrayList<>();

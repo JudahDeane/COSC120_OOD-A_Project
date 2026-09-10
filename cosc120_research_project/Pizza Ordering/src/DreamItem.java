@@ -76,15 +76,22 @@ public class DreamItem {
     public boolean compareDreamItem(DreamItem preference){
         for (Preferences key: preferences.keySet()){
             for(Object obj: preference.getPreference(key)) {
+                // this is for the boolean types like vegan
+                if(obj.equals(false)){
+                    continue;
+                }
+
                 if ("NA".equals(obj)){
                     continue;
                 }
                 if (preferences.get(key).equals(preference.getPreference(key))) {
-                    return true;
+                    continue;
                 }
+                return false;
             }
         }
         return false;
+
     }
 
 }
