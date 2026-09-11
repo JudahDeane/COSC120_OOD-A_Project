@@ -62,31 +62,20 @@ public class AllItems {
     public Set<String> getAllPreferenceValues(Preferences preference,Type type){
         Set<String> Set = new LinkedHashSet<>();
         List<Item> allItems = new ArrayList<>(this.allItems);
-        Set.add("NA");
-
+        Set.add("Don't Mind");
+        Set<Item> typeList = new LinkedHashSet<>();
         for(Item item:allItems){
-            // code to extract this is the same code from the getAllPreferences
-            Object firstVal = item.dreamItem().getPreference(Preferences.TYPE).getFirst();
-            if (firstVal instanceof Collection<?> col && !col.isEmpty()) {
-                firstVal = col.iterator().next();
+            if(item.dreamItem().getPreference(Preferences.TYPE).getFirst().equals(type)){
+                typeList.add(item);
             }
-            if (!firstVal.equals(type)){
-                continue;
-            }
-            // I did not come up with the code to check cast a set, but I fully understand it
-            List<Object> obj = item.dreamItem().getPreference(preference);
-            for (Object preferenceObj:obj){
-                if (preferenceObj instanceof Set<?> preferenceSet) {
-                    for (Object element : preferenceSet) {
-                        if (element instanceof String str) {
-                            if (!str.isEmpty()) {
-                                Set.add(str);
-                        }
-                    }
+        }
+        for(Item item:typeList){
+            for(Object obj: item.dreamItem().getPreference(preference)){
+                if(obj.equals("NA")){
+                    continue;
                 }
+                Set.add((String) obj);
             }
-            }
-
 
         }
 

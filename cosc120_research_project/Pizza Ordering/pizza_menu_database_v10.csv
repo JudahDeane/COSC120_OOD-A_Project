@@ -1,4 +1,5 @@
 Name,Type,Price,Cheese,Meat,Other_Ingredients,Sauce,dairy_allergy,gluten_allergy,soy_allergy,vegan,energy_KJ,description
+Prosciutto_Arugula,pizza,$18.85,[Mozzarella],[Prosciutto],[garlic],[Tomato_Herb],yes,yes,no,no,3363,[A hearty option for the hungriest customers.]
 Classic_Margherita,pizza,$21.50,[Mozzarella],NA,[garlic],[Tomato_Herb],yes,yes,no,no,5454,[Perfectly balanced taste, with a hint of herbs.]
 Pepperoni_Feast,pizza,$15.95,[Mozzarella],[Pepperoni,Spicy_Salami],[olives,mushrooms,spinach,garlic],[Tomato_Herb],yes,yes,no,no,3326,[A hearty option for the hungriest customers.]
 Meat_Lovers_Supreme,pizza,$16.50,[Mozzarella],[Pepperoni,Ham,Italian_Sausage,Bacon,Ground_Beef],[tomato],[Tomato_Herb],yes,yes,yes,no,3932,[Loaded with flavor; a true fan favorite.]
@@ -18,7 +19,6 @@ Vegan_Garden,pizza,$24.95,[Vegan_Mozzarella],NA,[spinach],[Tomato_Herb],no,yes,n
 Peri_Peri_Chicken,pizza,$21.85,[Mozzarella],[Grilled_Chicken],[arugula],[Peri-Peri_Mayo],yes,yes,no,no,2602,[A hearty option for the hungriest customers.]
 Carbonara_Pizza,pizza,$16.00,[Mozzarella],[Smoked_Bacon,Pancetta],[jalapenos,red_onion,arugula],[Tomato_Herb],yes,yes,no,no,3367,[Fresh ingredients, straight from the garden.]
 Bacon_&_Egg_Breakfast,pizza,$15.99,[Mozzarella],[Smoked_Bacon,Pancetta],[pineapple,capsicum,garlic],[Tomato_Herb],yes,yes,no,no,3933,[A timeless classic, baked to perfection!]
-Prosciutto_Arugula,pizza,$18.85,[Mozzarella],[Prosciutto],[garlic],[Tomato_Herb],yes,yes,no,no,3363,[A hearty option for the hungriest customers.]
 Diavola_Piccante,pizza,$24.99,[Mozzarella],[Pepperoni,Spicy_Salami],[capsicum,olives,mushrooms],[Tomato_Herb],yes,yes,no,no,4462,[Perfectly balanced taste, with a hint of herbs.]
 Smokey_Brisket,pizza,$14.95,[Mozzarella],[Slow-cooked_Beef_Brisket],[pineapple,basil],[BBQ],yes,yes,no,no,5723,[A timeless classic, baked to perfection!]
 Pesto_Veggie,pizza,$18.75,[Mozzarella],NA,[pineapple,jalapenos,garlic],[Basil_Pesto],yes,yes,no,no,4965,[Fresh ingredients, straight from the garden.]

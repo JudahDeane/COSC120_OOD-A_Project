@@ -49,6 +49,8 @@ public class OrderPizza {
         if (itemType == null) {
             System.exit(0);
         }
+
+
         Set<Preferences> itemValues = allItems.getAllPreferences(itemType);
         List<Object> cheese = new ArrayList<>();
         if (itemValues.contains(Preferences.CHEESE)) {
@@ -76,8 +78,11 @@ public class OrderPizza {
                     System.exit(0);
                 }
                 maxPrice = Integer.parseInt(maxPriceString);
+                if (maxPrice <0){
+                    Integer.parseInt("break here");
+                }
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "please enter a valid integer");
+                JOptionPane.showMessageDialog(null, "please enter a valid integer above zero");
                 continue;
             }
             break;
@@ -92,11 +97,11 @@ public class OrderPizza {
 
 
                 switch (veganString) {
-                    case "yes" -> {
+                    case "Yes" -> {
                         vegan = true;
                         loop = false;
                     }
-                    case "no" ->loop = false;
+                    case "No" ->loop = false;
                     default -> System.out.println("Please enter yes or no");
 
                 }
@@ -111,11 +116,11 @@ public class OrderPizza {
             }
 
             switch (dairyString) {
-                case "yes" -> {
+                case "Yes" -> {
                     dairy = true;
                     loop = false;
                 }
-                case "no" -> {
+                case "No" -> {
                     loop = false;
                 }
                 default -> System.out.println("Please enter yes or no");
@@ -132,11 +137,11 @@ public class OrderPizza {
 
 
             switch (soyString) {
-                case "yes" -> {
+                case "Yes" -> {
                     soy = true;
                     loop = false;
                 }
-                case "no" -> {
+                case "No" -> {
                     loop = false;
                 }
                 default -> System.out.println("Please enter yes or no") ;
@@ -153,17 +158,22 @@ public class OrderPizza {
 
 
             switch (glutenString) {
-                case "yes" -> {
+                case "Yes" -> {
                     gluten = true;
                     loop = false;
                 }
-                case "no" -> {
+                case "No" -> {
                     loop = false;
                 }
                 default -> System.out.println("Please enter yes or no");
 
             }
         }while (loop);
+
+
+
+
+
 
         Map<Preferences,List<Object>> map = new HashMap<>();
         List<Object> typeList = new ArrayList<>();
@@ -217,7 +227,9 @@ public class OrderPizza {
         }
         for (int i =1;i<lines.size();i++){
             Map<Preferences,Object> preferences = new HashMap<>();
-
+            if (lines.get(i).isEmpty()){
+                continue;
+            }
 
             List<String> items = new ArrayList<>();
             // this regex pattern and logic was created with the help of google gemini
@@ -236,9 +248,13 @@ public class OrderPizza {
 
 
             String name = items.get(0).replace(" ","_");
-            Type type;
+            Type type = null;
+            try{
+                type = Type.valueOf(items.get(1).toUpperCase());
+            } catch (IllegalArgumentException e ){
+                System.out.println(e);
+            }
 
-            type = Type.valueOf(items.get(1).toUpperCase());
 
             float price = 0;
             try {
@@ -247,7 +263,7 @@ public class OrderPizza {
                 System.out.println("error reading price");
                 System.exit(0);
             }
-            // System.out.println(line[3]);
+
             String[] cheeseArray = items.get(3).split(",");
             String[] meatArray = items.get(4).split(",");
             String[] ingredientsArray = items.get(5).split(",");
@@ -288,10 +304,22 @@ public class OrderPizza {
 
             String description = items.get(12);
 
-            Set<String> cheese = new TreeSet<>(List.of(cheeseArray));
-            Set<String> meat = new TreeSet<>(List.of(meatArray));
-            Set<String> ingredients = new TreeSet<>(List.of(ingredientsArray));
-            Set<String> sauce = new TreeSet<>(List.of(sauceArray));
+            List<String> cheese = new ArrayList<>(List.of(cheeseArray));
+            if (cheese.isEmpty()){
+                cheese.add("NA");
+            }
+            List<String> meat = new ArrayList<>(List.of(meatArray));
+            if (meat.isEmpty()){
+                cheese.add("NA");
+            }
+            List<String> ingredients = new ArrayList<>(List.of(ingredientsArray));
+            if (ingredients.isEmpty()){
+                cheese.add("NA");
+            }
+            List<String> sauce = new ArrayList<>(List.of(sauceArray));
+            if (sauce.isEmpty()){
+                cheese.add("NA");
+            }
 
 
 
@@ -433,7 +461,7 @@ public class OrderPizza {
         for (String str : set) {
             JCheckBox checkbox = new JCheckBox(str);
 
-            if (str.equals("NA")){
+            if (str.equals("Don't Mind")){
                 checkbox.setSelected(true);
             }
             checkBoxes.add(checkbox);
@@ -453,9 +481,16 @@ public class OrderPizza {
         if (option == JOptionPane.OK_OPTION) {
             for (JCheckBox checkBox : checkBoxes) {
                 if (checkBox.isSelected()) {
-                    selected.add(checkBox.getText());
+                    if (checkBox.getText().equals( "Don't Mind")){
+                        selected.add("NA");
+                    } else {
+                        selected.add(checkBox.getText());
+                    }
                 }
             }
+        }
+        if (selected.isEmpty()){
+            selected.add("None");
         }
         return selected;
     }

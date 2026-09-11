@@ -1,4 +1,6 @@
 
+import javax.management.ObjectName;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class DreamItem {
@@ -25,7 +27,16 @@ public class DreamItem {
         this.preferences = new HashMap<>();
         for (Preferences pref: preferences.keySet()){
             List<Object> list = new ArrayList<>();
-            list.add(preferences.get(pref));
+            Object value = preferences.get(pref);
+            // If the value is already a list (like cheese, meat, sauce), add its contents
+            if (value instanceof Collection) {
+                list.addAll((Collection<?>) value);
+            }
+            // If the value is a single object (like your boolean allergens), add it directly
+            else {
+                list.add(value);
+            }
+
             this.preferences.put(pref,list);
         }
 
@@ -75,22 +86,35 @@ public class DreamItem {
      */
     public boolean compareDreamItem(DreamItem preference){
         for (Preferences key: preferences.keySet()){
+
+
+
             for(Object obj: preference.getPreference(key)) {
-                // this is for the boolean types like vegan
-                if(obj.equals(false)){
-                    continue;
+                for(Object thisObj:preferences.get(key)) {
+                    // this is for the boolean types like vegan
+
+                    if (obj.equals(false)) {
+                        continue;
+                    }
+
+                    if("None".equals(obj)){
+                        if (thisObj.equals("NA")){
+                            continue;
+                        }
+                    }
+                    if ("NA".equals(obj)) {
+                        continue;
+                    }
+                    if (thisObj.equals(obj)) {
+                        continue;
+                    }
+                    return false;
                 }
 
-                if ("NA".equals(obj)){
-                    continue;
-                }
-                if (preferences.get(key).equals(preference.getPreference(key))) {
-                    continue;
-                }
-                return false;
             }
+
         }
-        return false;
+        return true;
 
     }
 
