@@ -1,3 +1,9 @@
+/**
+ * code created by Judah Deane (Judahdeane2@gmail.com)
+ * for TRIMESTER 2 2026 COSC120 Object Oriented Programming
+ * @github https://github.com/JudahDeane/COSC120_OOD-A_Project.git
+ *
+ */
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -15,18 +21,10 @@ public class AllItems {
     }
 
     /**
-     * gets an item from the array based on the name of the item
-     * @param name the name of the item to find
-     * @return the item in the array with the provided name
+     * get every preference key in all items filtered by the type
+     * @param type the type
+     * @return a set of every preference
      */
-    public Item getItem(String name){
-        for (Item item:allItems){
-            if (item.Name().equals(name)){
-                return item;
-            }
-        }
-        return null;
-    }
     public Set<Preferences> getAllPreferences(Type type){
         Set<Item> setType = new LinkedHashSet<>();
         Set<Preferences> set = new LinkedHashSet<>();
@@ -80,10 +78,6 @@ public class AllItems {
         }
 
         return Set;
-    }
-    public List<Item> getList(){
-
-        return new ArrayList<>(allItems);
     }
 
     /**

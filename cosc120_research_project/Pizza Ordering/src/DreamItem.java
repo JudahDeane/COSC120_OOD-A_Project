@@ -1,3 +1,9 @@
+/**
+ * code created by Judah Deane (Judahdeane2@gmail.com)
+ * for TRIMESTER 2 2026 COSC120 Object Oriented Programming
+ * @github https://github.com/JudahDeane/COSC120_OOD-A_Project.git
+ *
+ */
 
 import javax.management.ObjectName;
 import java.lang.reflect.Array;
@@ -9,9 +15,9 @@ public class DreamItem {
     private float maxPrice;
 
     /**
-     *  a constructer for when asking for prefrences
+     *  a constructor for when asking for preferences
      * @param preferences a map with the list of  preferences
-     * @param maxPrice a max prcie from the user
+     * @param maxPrice a max price from the user
      */
 
     public DreamItem(Map<Preferences, List<Object>> preferences, float maxPrice) {

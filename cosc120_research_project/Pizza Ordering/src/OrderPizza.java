@@ -1,3 +1,12 @@
+/**
+ * code created by Judah Deane (Judahdeane2@gmail.com)
+ * for TRIMESTER 2 2026 COSC120 Object Oriented Programming
+ * @github https://github.com/JudahDeane/COSC120_OOD-A_Project.git
+ *
+ */
+
+
+
 import javax.swing.*;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -12,6 +21,8 @@ import java.util.regex.Pattern;
 
 public class OrderPizza {
     private final static String appName = "Judah's Pizza Palace";
+    private final static String filePath = "./ItemDatabase.txt";
+    private final static Icon iconPath = new ImageIcon("PizzaImage.jpg");
 
 
     /**
@@ -27,7 +38,7 @@ public class OrderPizza {
             DreamItem dreamItem = getUserPreference(allItems);
             List<Item> matches = allItems.getMatches(dreamItem);
             if (matches.isEmpty()) {
-                JOptionPane.showConfirmDialog(null, "Sorry we didn't have any products that fit your criteria");
+                JOptionPane.showMessageDialog(null, "Sorry we didn't have any products that fit your criteria",appName,JOptionPane.PLAIN_MESSAGE,iconPath);
                 System.exit(0);
             }
             boolean chooseItem = chooseItem(matches);
@@ -45,7 +56,7 @@ public class OrderPizza {
      * @return returns a DreamItem with the preferences
      */
     private static DreamItem getUserPreference(AllItems allItems){
-        Type itemType = (Type) JOptionPane.showInputDialog(null,"Please enter what item you would like to buy",appName,JOptionPane.QUESTION_MESSAGE,null,Type.values(),null);
+        Type itemType = (Type) JOptionPane.showInputDialog(null,"Please enter what item you would like to buy",appName,JOptionPane.QUESTION_MESSAGE,iconPath,Type.values(),null);
         if (itemType == null) {
             System.exit(0);
         }
@@ -73,7 +84,7 @@ public class OrderPizza {
         int maxPrice;
         while (true) {
             try {
-                String maxPriceString = JOptionPane.showInputDialog(null,"What is the max price you would pay",appName,JOptionPane.QUESTION_MESSAGE);
+                String maxPriceString = (String) JOptionPane.showInputDialog(null,"What is the max price you would pay",appName,JOptionPane.QUESTION_MESSAGE,iconPath,null,null);
                 if (maxPriceString == null) {
                     System.exit(0);
                 }
@@ -90,7 +101,7 @@ public class OrderPizza {
         boolean loop = true;
         boolean vegan = false;
         do{
-            String veganString = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},"No");
+            String veganString = (String) JOptionPane.showInputDialog(null,"Are you vegan",appName,JOptionPane.QUESTION_MESSAGE,iconPath, new String[]{"Yes", "No"},"No");
             if (veganString == null) {
                 System.exit(0);
             }
@@ -110,7 +121,7 @@ public class OrderPizza {
         loop = true;
         boolean dairy = false;
         do {
-            String dairyString = (String) JOptionPane.showInputDialog(null, "Do you have a dairy allergen", appName, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, "No");
+            String dairyString = (String) JOptionPane.showInputDialog(null, "Do you have a dairy allergen", appName, JOptionPane.QUESTION_MESSAGE, iconPath, new String[]{"Yes", "No"}, "No");
             if (dairyString == null) {
                 System.exit(0);
             }
@@ -130,7 +141,7 @@ public class OrderPizza {
         loop = true;
         boolean soy = false;
         do{
-            String soyString = (String) JOptionPane.showInputDialog(null, "Do you have a soy allergen", appName, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, "No");
+            String soyString = (String) JOptionPane.showInputDialog(null, "Do you have a soy allergen", appName, JOptionPane.QUESTION_MESSAGE, iconPath, new String[]{"Yes", "No"}, "No");
             if (soyString == null) {
                 System.exit(0);
             }
@@ -151,7 +162,7 @@ public class OrderPizza {
         loop = true;
         boolean gluten = false;
         do {
-            String glutenString = (String) JOptionPane.showInputDialog(null, "Do you have a gluten allergen", appName, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, "No");
+            String glutenString = (String) JOptionPane.showInputDialog(null, "Do you have a gluten allergen", appName, JOptionPane.QUESTION_MESSAGE, iconPath, new String[]{"Yes", "No"}, "No");
             if (glutenString == null) {
                 System.exit(0);
             }
@@ -218,7 +229,7 @@ public class OrderPizza {
         AllItems allItems = new AllItems();
 
         List<String> lines = new ArrayList<>();
-        Path path = Path.of("pizza_menu_database_v10.csv");
+        Path path = Path.of(filePath);
         try {
             lines = Files.readAllLines(path);
         } catch (IOException e) {
@@ -370,15 +381,15 @@ public class OrderPizza {
         List<Item> items = new ArrayList<>();
         while (true) {
 
-            String choiceToLookString = (String) JOptionPane.showInputDialog(null,"Please enter what item you would like to view in more detail ",appName,JOptionPane.QUESTION_MESSAGE,null,names.toArray(),null);
+            String choiceToLookString = (String) JOptionPane.showInputDialog(null,"Please enter what item you would like to view in more detail ",appName,JOptionPane.QUESTION_MESSAGE,iconPath,names.toArray(),null);
             if (choiceToLookString== null) System.exit(0);
             choiceToLook = nameMap.get(choiceToLookString);
-            String buyChoice  = (String) JOptionPane.showInputDialog(null,descriptions.get(choiceToLook)+"\n would you like to buy this item",appName,JOptionPane.QUESTION_MESSAGE,null, new String[]{"Yes", "No"},null);
+            String buyChoice  = (String) JOptionPane.showInputDialog(null,descriptions.get(choiceToLook)+"\n would you like to buy this item",appName,JOptionPane.QUESTION_MESSAGE,iconPath, new String[]{"Yes", "No"},null);
             if (buyChoice== null) System.exit(0);
             else if (buyChoice.equals("Yes")) {
                 JOptionPane.showMessageDialog(null,"Thank you for Purchasing ");
                 items.add(choiceToLook);
-                String buyAnother = (String) JOptionPane.showInputDialog(null,"would you like to buy another item",appName,JOptionPane.QUESTION_MESSAGE,null,new String[]{"Yes","No"},null);
+                String buyAnother = (String) JOptionPane.showInputDialog(null,"would you like to buy another item",appName,JOptionPane.QUESTION_MESSAGE,iconPath,new String[]{"Yes","No"},null);
                 if(buyAnother.isEmpty()) System.exit(0);
                 if(buyAnother.equals("Yes")) return true;
                 break;
@@ -399,22 +410,22 @@ public class OrderPizza {
      */
     public static Person getUserData(){
 
-        String email = JOptionPane.showInputDialog(null,"Please enter your email");
+        String email = (String) JOptionPane.showInputDialog(null,"Please enter your email",appName,JOptionPane.PLAIN_MESSAGE,iconPath,null,null);
         if (email== null) System.exit(0);
-        String name =  JOptionPane.showInputDialog(null,"Please enter your name");
+        String name =  (String) JOptionPane.showInputDialog(null,"Please enter your name",appName,JOptionPane.PLAIN_MESSAGE,iconPath,null,null);
         if (name== null) System.exit(0);
         int phoneNum;
         while (true) {
-            String phoneNumber =  JOptionPane.showInputDialog(null, "Please enter your phone number");
+            String phoneNumber = (String) JOptionPane.showInputDialog(null, "Please enter your phone number",appName,JOptionPane.PLAIN_MESSAGE,iconPath,null,null);
             if (phoneNumber == null) System.exit(0);
             try {
                 phoneNum = Integer.parseInt(phoneNumber);
                 break;
             } catch (NumberFormatException e) {
-                JOptionPane.showConfirmDialog(null,"Please enter a Integer");
+                JOptionPane.showConfirmDialog(null,"Please enter a Integer",appName,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,iconPath);
             }
         }
-        String address =  JOptionPane.showInputDialog(null,"please enter your address for delivery ");
+        String address =  (String) JOptionPane.showInputDialog(null,"please enter your address for delivery ",null,JOptionPane.PLAIN_MESSAGE,iconPath,null,null);
 
 
         return new Person(email,name,phoneNum,address);
@@ -472,7 +483,7 @@ public class OrderPizza {
                 null,
                 panel,
                 "Preferences",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, iconPath
         );
         if (option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CANCEL_OPTION) {
             System.exit(0);
@@ -493,6 +504,34 @@ public class OrderPizza {
             selected.add("None");
         }
         return selected;
+    }
+
+
+    /**
+     * these two methods are from seek a geek by Dr Andreas Shepley
+     */
+
+    /**
+     * a regex matcher that ensures that the user's entry starts with a 0 and is followed by 9 digits
+     * @param phoneNumber the candidate phone number entered by the user
+     * @return true if phone number matches regex/false if not
+     */
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        Pattern pattern = Pattern.compile("^0\\d{9}$");
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
+    /**
+     * a regex matcher that ensures that the user's entry complies with RFC 5322
+     * source: <a href="https://www.baeldung.com/java-email-validation-regex">...</a>
+     * @param email the candidate email entered by the user
+     * @return true if email matches regex/false if not
+     */
+    public static boolean isValidEmail(String email) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
 
