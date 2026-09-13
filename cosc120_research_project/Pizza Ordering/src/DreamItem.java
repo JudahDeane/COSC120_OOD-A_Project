@@ -112,15 +112,8 @@ public class DreamItem {
                     typeCheck.add(Preferences.SAUCE);
                     // checks if it has multiple items like a List if so do an inverted check
                     if(typeCheck.contains(key)) {
-                        // this is for the boolean types like vegan
-                        if (obj.equals(false)) {
-                            continue;
-                        }
 
 
-                        if ("NA".equals(obj)) {
-                            continue;
-                        }
                         // invert the check because all list items are inverted as well
                         if (!thisObj.equals(obj)) {
                             continue;
@@ -130,16 +123,14 @@ public class DreamItem {
                         if (obj.equals(false)) {
                             continue;
                         }
-                        if (obj.equals(true)&&thisObj.equals(false)){
-                            continue;
-                        }
+
 
 
                         if ("NA".equals(obj)) {
                             continue;
                         }
 
-                        if (thisObj.equals(obj) && !(obj instanceof Boolean)) {
+                        if (thisObj.equals(obj)) {
                             continue;
                         }
                     }
