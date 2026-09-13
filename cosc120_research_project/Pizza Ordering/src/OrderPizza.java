@@ -9,6 +9,7 @@
 
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
@@ -46,7 +47,9 @@ public class OrderPizza {
             List<Item> matches = allItems.getMatches(dreamItem);
             if (matches.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Sorry we didn't have any products that fit your criteria",appName,JOptionPane.PLAIN_MESSAGE,iconPath);
-                System.exit(0);
+                int noItems = JOptionPane.showOptionDialog(null,"would you like to buy another item",appName,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,iconPath,new String[]{"Yes","No"},null);
+                if(noItems== JOptionPane.CLOSED_OPTION) System.exit(0);
+                if(noItems==0) continue;
             }
             boolean chooseItem = chooseItem(matches);
             if (chooseItem) {
@@ -397,9 +400,6 @@ public class OrderPizza {
             else if (buyChoice.equals("Yes")) {
                 JOptionPane.showMessageDialog(null,"Thank you for Purchasing ");
                 items.add(choiceToLook);
-                String buyAnother = (String) JOptionPane.showInputDialog(null,"would you like to buy another item",appName,JOptionPane.QUESTION_MESSAGE,iconPath,new String[]{"Yes","No"},null);
-                if(buyAnother.isEmpty()) System.exit(0);
-                if(buyAnother.equals("Yes")) return true;
                 break;
             }
 
@@ -434,7 +434,7 @@ public class OrderPizza {
                 if (isValidPhoneNumber(phoneNumber)) {System.out.println("please enter a valid email"); break;}
                 break;
             } catch (NumberFormatException e) {
-                JOptionPane.showConfirmDialog(null,"Please enter a Integer",appName,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,iconPath);
+                JOptionPane.showConfirmDialog(null,"Please enter a valid phone number",appName,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,iconPath);
             }
         }
 
@@ -451,7 +451,7 @@ public class OrderPizza {
     public static void writeRecord(Person person, List<Item> items){
         String pathString = person.name().strip()+"Order_request.txt";
         Path path = Path.of(pathString);
-        StringBuilder write = new StringBuilder(person.name() + " with details" + "\n email: " + person.email() + "\n Phone Number: " + person.phoneNumber()+"\n Would like to order the following items:\n");
+        StringBuilder write = new StringBuilder(person.name() + " with details" + "\n email: " + person.email() + "\n Phone Number: " + person.phoneNumber()+"\n Would like to order the following item:\n");
         for (Item item:items){
             write.append(item.Name()).append("\n");
         }

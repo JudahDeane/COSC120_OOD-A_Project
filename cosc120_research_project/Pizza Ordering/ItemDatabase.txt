@@ -16,7 +16,6 @@ Garlic_Prawn_Delight,pizza,$21.95,[Mozzarella],[Garlic_Prawns],[spinach,jalapeno
 Capricciosa,pizza,$21.00,[Mozzarella],[Ham,Pepperoni],[basil,jalapenos,tomato],[Tomato_Herb],yes,yes,no,no,3996,[Fresh ingredients, straight from the garden.]
 Mediterranean_Olive,pizza,$22.50,[Mozzarella],[Ham,Pepperoni],[garlic,red_onion],[Tomato_Herb],yes,yes,no,no,3979,[Spicy and savory, definitely packs a punch!]
 Sweet_Chilli_Chicken,pizza,$17.95,[Mozzarella],[Grilled_Chicken],[garlic,mushrooms],[Tomato_Herb],yes,yes,no,no,5471,[Rich, creamy, and undeniably delicious.]
-Vegan_Garden,pizza,$24.95,[Vegan_Mozzarella],NA,[spinach],[Tomato_Herb],no,yes,no,no,5062,[Spicy and savory, definitely packs a punch!]
 Peri_Peri_Chicken,pizza,$21.85,[Mozzarella],[Grilled_Chicken],[arugula],[Peri-Peri_Mayo],yes,yes,no,no,2602,[A hearty option for the hungriest customers.]
 Carbonara_Pizza,pizza,$16.00,[Mozzarella],[Smoked_Bacon,Pancetta],[jalapenos,red_onion,arugula],[Tomato_Herb],yes,yes,no,no,3367,[Fresh ingredients, straight from the garden.]
 Bacon_&_Egg_Breakfast,pizza,$15.99,[Mozzarella],[Smoked_Bacon,Pancetta],[pineapple,capsicum,garlic],[Tomato_Herb],yes,yes,no,no,3933,[A timeless classic, baked to perfection!]
