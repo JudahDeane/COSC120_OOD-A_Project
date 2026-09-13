@@ -1,4 +1,5 @@
 Name,Type,Price,Cheese,Meat,Other_Ingredients,Sauce,dairy_allergy,gluten_allergy,soy_allergy,vegan,energy_KJ,description
+Vegan_Garden,pizza,$24.95,[Vegan_Mozzarella],NA,[spinach],[Tomato_Herb],no,yes,no,no,5062,[Spicy and savory, definitely packs a punch!]
 Prosciutto_Arugula,pizza,$18.85,[Mozzarella],[Prosciutto],[garlic],[Tomato_Herb],yes,yes,no,no,3363,[A hearty option for the hungriest customers.]
 Classic_Margherita,pizza,$21.50,[Mozzarella],NA,[garlic],[Tomato_Herb],yes,yes,no,no,5454,[Perfectly balanced taste, with a hint of herbs.]
 Pepperoni_Feast,pizza,$15.95,[Mozzarella],[Pepperoni,Spicy_Salami],[olives,mushrooms,spinach,garlic],[Tomato_Herb],yes,yes,no,no,3326,[A hearty option for the hungriest customers.]

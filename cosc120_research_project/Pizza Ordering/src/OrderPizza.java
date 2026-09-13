@@ -2,6 +2,7 @@
  * code created by Judah Deane (Judahdeane2@gmail.com)
  * for TRIMESTER 2 2026 COSC120 Object Oriented Programming
  * @github https://github.com/JudahDeane/COSC120_OOD-A_Project.git
+ * @Author Judah Deane
  *
  */
 
@@ -19,7 +20,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *this is the program class for an online menu for a Pizza place called Judah's Pizza Palace
+ */
 public class OrderPizza {
+
+
+
     private final static String appName = "Judah's Pizza Palace";
     private final static String filePath = "./ItemDatabase.txt";
     private final static Icon iconPath = new ImageIcon("PizzaImage.jpg");
@@ -84,7 +91,7 @@ public class OrderPizza {
         int maxPrice;
         while (true) {
             try {
-                String maxPriceString = (String) JOptionPane.showInputDialog(null,"What is the max price you would pay",appName,JOptionPane.QUESTION_MESSAGE,iconPath,null,null);
+                String maxPriceString = (String) JOptionPane.showInputDialog(null,"What is the max price you would pay (numbers only eg 20)",appName,JOptionPane.QUESTION_MESSAGE,iconPath,null,null);
                 if (maxPriceString == null) {
                     System.exit(0);
                 }
@@ -243,7 +250,8 @@ public class OrderPizza {
             }
 
             List<String> items = new ArrayList<>();
-            // this regex pattern and logic was created with the help of google gemini
+            // this regex pattern and logic was created with the help of Google Gemini
+            // I searched "how to handle nested commas in arrays java with regex" in Google
             Matcher matcher = Pattern.compile("\\[(.*?)]|([^,]+)").matcher(lines.get(i));
 
             while (matcher.find()) {
@@ -405,13 +413,16 @@ public class OrderPizza {
     }
 
     /**
-     * gets the user contact and delivery information
+     * gets the user contact details and checks important info with regex then stores that data in a person record
      * @return a person record with the information
      */
     public static Person getUserData(){
-
-        String email = (String) JOptionPane.showInputDialog(null,"Please enter your email",appName,JOptionPane.PLAIN_MESSAGE,iconPath,null,null);
-        if (email== null) System.exit(0);
+        String email = null;
+        while (true) {
+            email = (String) JOptionPane.showInputDialog(null, "Please enter your email", appName, JOptionPane.PLAIN_MESSAGE, iconPath, null, null);
+            if (email == null) System.exit(0);
+            if (isValidEmail(email)) {System.out.println("please enter a valid email"); break;}
+        }
         String name =  (String) JOptionPane.showInputDialog(null,"Please enter your name",appName,JOptionPane.PLAIN_MESSAGE,iconPath,null,null);
         if (name== null) System.exit(0);
         int phoneNum;
@@ -420,15 +431,16 @@ public class OrderPizza {
             if (phoneNumber == null) System.exit(0);
             try {
                 phoneNum = Integer.parseInt(phoneNumber);
+                if (isValidPhoneNumber(phoneNumber)) {System.out.println("please enter a valid email"); break;}
                 break;
             } catch (NumberFormatException e) {
                 JOptionPane.showConfirmDialog(null,"Please enter a Integer",appName,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,iconPath);
             }
         }
-        String address =  (String) JOptionPane.showInputDialog(null,"please enter your address for delivery ",null,JOptionPane.PLAIN_MESSAGE,iconPath,null,null);
 
 
-        return new Person(email,name,phoneNum,address);
+
+        return new Person(email,name,phoneNum);
     }
 
     /**
@@ -437,15 +449,14 @@ public class OrderPizza {
      * @param items the item being ordered
      */
     public static void writeRecord(Person person, List<Item> items){
-        String pathString = person.name().strip()+"Delivery_request.txt";
+        String pathString = person.name().strip()+"Order_request.txt";
         Path path = Path.of(pathString);
-        StringBuilder write = new StringBuilder(person.name() + " with details" + "\n Address:" + person.address() + "\n email: " + person.email() + "\n Phone Number: " + person.phoneNumber()+"\n Would like to order the following items:");
+        StringBuilder write = new StringBuilder(person.name() + " with details" + "\n email: " + person.email() + "\n Phone Number: " + person.phoneNumber()+"\n Would like to order the following items:\n");
         for (Item item:items){
-            write.append(item.description()).append("\n");
+            write.append(item.Name()).append("\n");
         }
         try {
             Files.writeString(path, write);
-
         } catch (IOException e){
             System.out.println("error trying to read file");
             System.exit(0);
@@ -454,9 +465,10 @@ public class OrderPizza {
     }
 
     /**
-     * this method was coded with help from Google Gemini
+     * the default Google AI helped me build a skeleton for this project I searched up "how to do checkbox in JOptionpane"
      *
      * creates a JOption pane with check boxes with the set of strings provided
+     * First it creates a panel with a title then addes all the items from the set then shows a dialog with the panel and returns a list of the boxes not selected exept for dont mind
      * @param set the set of strings to use as checkboxes
      * @param item the name of the type of thing to be selecting
      * @return a list of the selected checkboxes
@@ -465,16 +477,13 @@ public class OrderPizza {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-        panel.add(new JLabel("Select your preferred " + item + ":"));
+        panel.add(new JLabel("Please select any " + item + " you like:"));
 
         List<JCheckBox> checkBoxes = new ArrayList<>();
 
         for (String str : set) {
             JCheckBox checkbox = new JCheckBox(str);
 
-            if (str.equals("Don't Mind")){
-                checkbox.setSelected(true);
-            }
             checkBoxes.add(checkbox);
             panel.add(checkbox);
         }
@@ -482,7 +491,7 @@ public class OrderPizza {
         int option = JOptionPane.showConfirmDialog(
                 null,
                 panel,
-                "Preferences",
+                appName,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, iconPath
         );
         if (option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CANCEL_OPTION) {
@@ -494,24 +503,23 @@ public class OrderPizza {
                 if (checkBox.isSelected()) {
                     if (checkBox.getText().equals( "Don't Mind")){
                         selected.add("NA");
-                    } else {
-                        selected.add(checkBox.getText());
                     }
+                }else {
+                    if (checkBox.getText().equals( "Don't Mind")){
+                       continue;
+
+                    }
+                    // adds the not selected ones instead of the selected because my find matches searches the opisite
+                    selected.add(checkBox.getText());
                 }
             }
         }
-        if (selected.isEmpty()){
-            selected.add("None");
-        }
+
         return selected;
     }
-
-
     /**
-     * these two methods are from seek a geek by Dr Andreas Shepley
-     */
-
-    /**
+     * @author Dr Andreas Shepley
+     * from seek a geek
      * a regex matcher that ensures that the user's entry starts with a 0 and is followed by 9 digits
      * @param phoneNumber the candidate phone number entered by the user
      * @return true if phone number matches regex/false if not
@@ -523,6 +531,8 @@ public class OrderPizza {
     }
 
     /**
+     * @author Dr Andreas Shepley
+     * from seek a geek
      * a regex matcher that ensures that the user's entry complies with RFC 5322
      * source: <a href="https://www.baeldung.com/java-email-validation-regex">...</a>
      * @param email the candidate email entered by the user

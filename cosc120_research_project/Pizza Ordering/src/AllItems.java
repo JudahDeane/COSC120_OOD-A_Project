@@ -60,7 +60,7 @@ public class AllItems {
     public Set<String> getAllPreferenceValues(Preferences preference,Type type){
         Set<String> Set = new LinkedHashSet<>();
         List<Item> allItems = new ArrayList<>(this.allItems);
-        Set.add("Don't Mind");
+
         Set<Item> typeList = new LinkedHashSet<>();
         for(Item item:allItems){
             if(item.dreamItem().getPreference(Preferences.TYPE).getFirst().equals(type)){
@@ -76,6 +76,7 @@ public class AllItems {
             }
 
         }
+        Set.add("Don't Mind");
 
         return Set;
     }

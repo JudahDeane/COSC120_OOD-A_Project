@@ -9,6 +9,9 @@ import javax.management.ObjectName;
 import java.lang.reflect.Array;
 import java.util.*;
 
+/**
+ * this is the search template which contains the objects to search by
+ */
 public class DreamItem {
     private final Map<Preferences,List<Object>> preferences;
 
@@ -26,7 +29,7 @@ public class DreamItem {
     }
 
     /**
-     * a constructor for the normal
+     * a constructor for a real item
      * @param preferences A constructor for a real item
      */
     public DreamItem(Map<Preferences, Object> preferences) {
@@ -74,7 +77,7 @@ public class DreamItem {
     }
 
     /**
-     * get a descriptions of the item
+     * get a descriptions of the preferences in the map
      * @return a string of the list of descriptions
      */
     public String getDescription(){
@@ -86,7 +89,7 @@ public class DreamItem {
     }
 
     /**
-     * compares two dream items and returns true if they are the same
+     * compares two dream items and returns true if the object parsed is contained in the dream item where this method is called on
      * @param preference a dream item to compare this item to
      * @return True or false if they match their preferences
      */
@@ -97,23 +100,50 @@ public class DreamItem {
 
             for(Object obj: preference.getPreference(key)) {
                 for(Object thisObj:preferences.get(key)) {
-                    // this is for the boolean types like vegan
+                    List<Object> thisPreference = new ArrayList<>(preference.getPreference(key));
 
-                    if (obj.equals(false)) {
+                    if (thisPreference.contains("NA")){
                         continue;
                     }
+                    List<Preferences> typeCheck = new ArrayList<>();
+                    typeCheck.add(Preferences.CHEESE);
+                    typeCheck.add(Preferences.INGREDIENTS);
+                    typeCheck.add(Preferences.MEAT);
+                    typeCheck.add(Preferences.SAUCE);
+                    // checks if it has multiple items like a List if so do an inverted check
+                    if(typeCheck.contains(key)) {
+                        // this is for the boolean types like vegan
+                        if (obj.equals(false)) {
+                            continue;
+                        }
 
-                    if("None".equals(obj)){
-                        if (thisObj.equals("NA")){
+
+                        if ("NA".equals(obj)) {
+                            continue;
+                        }
+                        // invert the check because all list items are inverted as well
+                        if (!thisObj.equals(obj)) {
+                            continue;
+                        }
+                    }else {
+                        // this is for the boolean types like vegan
+                        if (obj.equals(false)) {
+                            continue;
+                        }
+                        if (obj.equals(true)&&thisObj.equals(false)){
+                            continue;
+                        }
+
+
+                        if ("NA".equals(obj)) {
+                            continue;
+                        }
+
+                        if (thisObj.equals(obj) && !(obj instanceof Boolean)) {
                             continue;
                         }
                     }
-                    if ("NA".equals(obj)) {
-                        continue;
-                    }
-                    if (thisObj.equals(obj)) {
-                        continue;
-                    }
+
                     return false;
                 }
 

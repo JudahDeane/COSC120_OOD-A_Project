@@ -4,6 +4,10 @@
  * @github https://github.com/JudahDeane/COSC120_OOD-A_Project.git
  *
  */
+
+/**
+ * the types of products an item could be
+ */
 public enum Type {
     PIZZA,SIDE,DESSERT,DRINK
 }
